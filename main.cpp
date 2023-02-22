@@ -79,62 +79,64 @@ int main() {
     }
 
     // [4] call a method of a class
-    cout << "\n" << "Call a Method of a Class:" << endl;
-    // find & import module
-    pModule = PyImport_ImportModule("hello_world");
-    if (!pModule) {  // error handling
-        PyErr_Print();
-        fprintf(stderr, "[ERROR] Failed to Load Module \"%s\"\n", "hello_world");
-        return 1;
-    }
-    // find class in module
-    pCls = PyObject_GetAttrString(pModule, "ClassObject");
-    if (!pCls || !PyCallable_Check(pCls)) {  // error handling
-        Py_DECREF(pModule);
-        PyErr_Print();
-        fprintf(stderr, "[ERROR] Failed to Load Class \"%s\"\n", "ClassObject");
-        return 1;
-    }
-    // instantiate class obj, passing args
-    pArgs = Py_BuildValue("si", "hello", 42);
-    pClsInst = PyObject_CallObject(pCls, pArgs);
-    Py_DECREF(pArgs);
-    if (!pClsInst) {  // error handling
-        Py_DECREF(pCls);
-        Py_DECREF(pModule);
-        PyErr_Print();
-        fprintf(stderr, "[ERROR] Failed to Instantiate an Object");
-        return 1;
-    }
-    // find method of class obj
-    pFunc = PyObject_GetAttrString(pClsInst, "class_met_w_params");
-    if (!pFunc || !PyCallable_Check(pFunc)) {  // error handling
+    {
+        cout << "\n" << "Call a Method of a Class:" << endl;
+        // find & import module
+        pModule = PyImport_ImportModule("hello_world");
+        if (!pModule) {  // error handling
+            PyErr_Print();
+            fprintf(stderr, "[ERROR] Failed to Load Module \"%s\"\n", "hello_world");
+            return 1;
+        }
+        // find class in module
+        pCls = PyObject_GetAttrString(pModule, "ClassObject");
+        if (!pCls || !PyCallable_Check(pCls)) {  // error handling
+            Py_DECREF(pModule);
+            PyErr_Print();
+            fprintf(stderr, "[ERROR] Failed to Load Class \"%s\"\n", "ClassObject");
+            return 1;
+        }
+        // instantiate class obj, passing args
+        pArgs = Py_BuildValue("si", "hello", 42);
+        pClsInst = PyObject_CallObject(pCls, pArgs);
+        Py_DECREF(pArgs);
+        if (!pClsInst) {  // error handling
+            Py_DECREF(pCls);
+            Py_DECREF(pModule);
+            PyErr_Print();
+            fprintf(stderr, "[ERROR] Failed to Instantiate an Object");
+            return 1;
+        }
+        // find method of class obj
+        pFunc = PyObject_GetAttrString(pClsInst, "class_met_w_params");
+        if (!pFunc || !PyCallable_Check(pFunc)) {  // error handling
+            Py_DECREF(pClsInst);
+            Py_DECREF(pCls);
+            Py_DECREF(pModule);
+            PyErr_Print();
+            fprintf(stderr, "[ERROR] Failed to Find Method \"%s\"\n", "class_met_w_params");
+            return 1;
+        }
+        // calling method of class obj
+        pArgs = PyTuple_New(1); // arg `size` is the number of params to-be-passed to the Python function
+        PyTuple_SetItem(pArgs, 0, Py_BuildValue("i", 1));  // set idx=0; format code `"i"` is <int> in Python & C++
+        pRet = PyObject_CallObject(pFunc, pArgs);
+        Py_DECREF(pArgs);
+        if (!pRet) {
+            Py_DECREF(pClsInst);
+            Py_DECREF(pCls);
+            Py_DECREF(pModule);
+            PyErr_Print();
+            fprintf(stderr, "[ERROR] Failed to Call Method\n");
+            return 1;
+        }
+        printf("Result of call: \"%s\"\n", PyUnicode_AsUTF8(pRet));
+        Py_DECREF(pRet);
+        Py_DECREF(pFunc);
         Py_DECREF(pClsInst);
         Py_DECREF(pCls);
         Py_DECREF(pModule);
-        PyErr_Print();
-        fprintf(stderr, "[ERROR] Failed to Find Method \"%s\"\n", "class_met_w_params");
-        return 1;
     }
-    // calling method of class obj
-    pArgs = PyTuple_New(1); // arg `size` is the number of params to-be-passed to the Python function
-    PyTuple_SetItem(pArgs, 0, Py_BuildValue("i", 1));  // set idx=0; format code `"i"` is <int> in Python & C++
-    pRet = PyObject_CallObject(pFunc, pArgs);
-    Py_DECREF(pArgs);
-    if (!pRet) {
-        Py_DECREF(pClsInst);
-        Py_DECREF(pCls);
-        Py_DECREF(pModule);
-        PyErr_Print();
-        fprintf(stderr, "[ERROR] Failed to Call Method\n");
-        return 1;
-    }
-    printf("Result of call: \"%s\"\n", PyUnicode_AsUTF8(pRet));
-    Py_DECREF(pRet);
-    Py_DECREF(pFunc);
-    Py_DECREF(pClsInst);
-    Py_DECREF(pCls);
-    Py_DECREF(pModule);
 
 
 

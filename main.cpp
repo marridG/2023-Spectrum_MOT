@@ -1,14 +1,19 @@
 #define PY_SSIZE_T_CLEAN
 
 #include <Python.h>
-// #include <bits/stdc++.h>
-#include <iostream>
+#include <bits/stdc++.h>
+
+#include "utils.h"
 
 using namespace std;
 
 #define DEBUG
 
 int main() {
+
+    char *img_buffer = MakeImageStreamBufferFromFile();
+
+
 
     // ===== initialize Python interpreter =====
     cout << "Initializing ... " << flush;

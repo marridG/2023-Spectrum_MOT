@@ -12,15 +12,16 @@ using namespace std;
 #define DEBUG
 #define IMG_FN "../test.jpg"
 
-char *ApproachOne();
-char *ApproachTwo();
+// alert: assuming that the image file is no larger than 2147483647 Bytes (~2GB)
+tuple<char *, int> ApproachOne();
+tuple<char *, int> ApproachTwo();
 
-char *MakeImageStreamBufferFromFile() {
+tuple<char *, int> MakeImageStreamBufferFromFile() {
     return ApproachOne();
 }
 
 
-char *ApproachOne() {
+tuple<char *, int> ApproachOne() {
     // reference: https://blog.csdn.net/qq_29695701/article/details/84262492
     // [alert] Stack Overflow discourages the use of `tellg()`. per: https://stackoverflow.com/a/13394183
 
@@ -29,7 +30,7 @@ char *ApproachOne() {
 
     // calculate the length of the image
     img_stream.seekg(0, std::ifstream::end);
-    int length = (int) img_stream.tellg();  // alert: assuming no overflow concerns
+    int length = (int) img_stream.tellg();
     img_stream.seekg(0, std::ifstream::beg);
 
     if (length <= 0) {  // error handling
@@ -44,11 +45,11 @@ char *ApproachOne() {
     // release file descriptor
     img_stream.close();
 
-    cout << "Read & Store Image Sized " << length << " to Memory Buffer. (Approach #1)" << endl;
-    return buffer;
+    cout << "Read & Store Image Sized " << length << " Bytes to Memory Buffer. (Approach #1)" << endl;
+    return make_tuple(buffer, length);
 }
 
-char *ApproachTwo() {
+tuple<char *, int> ApproachTwo() {
     // reference: https://blog.csdn.net/weixin_34108829/article/details/117040951
 
     int length;
@@ -73,6 +74,6 @@ char *ApproachTwo() {
     // release file descriptor
     fclose(fp);
 
-    cout << "Read & Store Image Sized " << length << " to Memory Buffer. (Approach #2)" << endl;
-    return buffer;
+    cout << "Read & Store Image Sized " << length << " Bytes to Memory Buffer. (Approach #2)" << endl;
+    return make_tuple(buffer, length);
 }

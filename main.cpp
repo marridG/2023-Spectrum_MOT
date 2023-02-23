@@ -13,7 +13,10 @@ using namespace std;
 
 int main() {
 
-    char *img_buffer = MakeImageStreamBufferFromFile();
+    char *img_buffer;
+    int img_size_byte;
+    tie(img_buffer, img_size_byte) = MakeImageStreamBufferFromFile();
+    cout << img_buffer << "=>" << img_size_byte << endl;
 
 
 
@@ -35,6 +38,45 @@ int main() {
     // declare pointer variables
     PyObject *p_name, *p_module, *p_class, *p_class_obj, *p_func;
     PyObject *p_args, *p_return;
+
+
+    {
+        cout << "\n" << "Call a Function of a Module:" << endl;
+        // find & import module
+        p_module = PyImport_ImportModule("hello_world");
+        if (!p_module) {  // error handling
+            PyErr_Print();
+            fprintf(stderr, "[ERROR] Failed to Load Module \"%s\"\n", "hello_world");
+            return 1;
+        }
+        // find function in module
+        p_func = PyObject_GetAttrString(p_module, "buffer_2_image_file");
+        if (!p_func || !PyCallable_Check(p_func)) {  // error handling
+            Py_DECREF(p_module);
+            PyErr_Print();
+            fprintf(stderr, "[ERROR] Failed to Load Function \"%s\" (of Module \"%s\")\n", "do",
+                    " buffer_2_image_file");
+            return 1;
+        }
+
+        p_args = Py_BuildValue("y#,i", img_buffer, img_size_byte);
+        // call the function
+        p_return = PyObject_CallObject(p_func, p_args);
+        Py_DECREF(p_args);
+        if (!p_return) {  // error handling
+            Py_DECREF(p_func);
+            Py_DECREF(p_module);
+            PyErr_Print();
+            fprintf(stderr, "Call (with Args) Failed\n");
+            return 1;
+        }
+        printf("Result of call: \"%s\"\n", PyUnicode_AsUTF8(p_return));
+        Py_DECREF(p_return);
+        Py_DECREF(p_func);
+        Py_DECREF(p_module);
+    }
+
+
 
     // [1] run a simple Python command
     {

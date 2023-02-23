@@ -1,3 +1,6 @@
+import io
+from PIL import Image
+
 print("Python Scripts File - Direct Command")
 
 
@@ -9,6 +12,31 @@ def func_w_params(param):
     res = "Python Scripts File - Function w. Params: %s" % param
     print(res)
     return res
+
+
+def buffer_2_image(img_buffer: bytes, is_debug: bool = False):
+    """
+    for the binary buffer of a given image, convert to a <PIL.Image> object
+    :param img_buffer:      image binary buffer, typed <bytes>
+    :param img_size_byte:   size of the image, in bytes
+    :return:                corresponding <PIL.Image> object
+    """
+    # Reference: https://stackoverflow.com/a/32908899
+
+    if is_debug is True:
+        print("size:", type(img_size_byte), img_size_byte)
+        print("buffer:", type(img_buffer), len(img_buffer))
+    img = Image.open(io.BytesIO(img_buffer))
+
+    if is_debug is True:
+        img.show()
+    return img
+
+
+def buffer_2_image_file(img_buffer: bytes, size: int):
+    img = buffer_2_image(img_buffer=img_buffer)
+    img.save("img1.png", "PNG")
+    return "Success"
 
 
 class ClassObject:

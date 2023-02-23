@@ -18,13 +18,12 @@ def buffer_2_image(img_buffer: bytes, is_debug: bool = False):
     """
     for the binary buffer of a given image, convert to a <PIL.Image> object
     :param img_buffer:      image binary buffer, typed <bytes>
-    :param img_size_byte:   size of the image, in bytes
+    :param is_debug:        flag indicating whether is debug mode. `True` if so, `False` otherwise
     :return:                corresponding <PIL.Image> object
     """
     # Reference: https://stackoverflow.com/a/32908899
 
     if is_debug is True:
-        print("size:", type(img_size_byte), img_size_byte)
         print("buffer:", type(img_buffer), len(img_buffer))
     img = Image.open(io.BytesIO(img_buffer))
 
@@ -33,7 +32,7 @@ def buffer_2_image(img_buffer: bytes, is_debug: bool = False):
     return img
 
 
-def buffer_2_image_file(img_buffer: bytes, size: int):
+def buffer_2_image_file(img_buffer: bytes):
     img = buffer_2_image(img_buffer=img_buffer)
     img.save("img1.png", "PNG")
     return "Success"

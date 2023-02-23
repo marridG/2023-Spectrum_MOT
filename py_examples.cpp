@@ -294,7 +294,7 @@ void RunPyPassImage() {
         exit(1);
     }
 
-    p_args = Py_BuildValue("y#,i", img_buffer, img_size_byte);
+    p_args = Py_BuildValue("(y#)", img_buffer, img_size_byte);
     // call the function
     p_return = PyObject_CallObject(p_func, p_args);
     Py_DECREF(p_args);

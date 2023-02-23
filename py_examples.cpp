@@ -327,6 +327,7 @@ void RunPyPassImage() {
  * run a Python function, which returns an int-array shaped (N,4), indicating bbox
  */
 void RunPyGetArray() {
+    static const int LEN_BBOX_FEATURE = 4;
 
     // exec if run alone
     // // ===== initialize Python interpreter =====
@@ -347,6 +348,7 @@ void RunPyGetArray() {
     // declare pointer variables
     PyObject *p_name, *p_module, *p_class, *p_class_obj, *p_func;
     PyObject *p_args, *p_return;
+    PyObject *p_temp;
 
     cout << "\n" << "Call a Function of a Module:" << endl;
     // find & import module
@@ -375,8 +377,34 @@ void RunPyGetArray() {
         fprintf(stderr, "Call (without Args) Failed\n");
         exit(1);
     }
-    // printf("Result of call: \"%s\"\n", PyUnicode_AsUTF8(p_return));
+    // handles the returned (N,LEN_BBOX_FEATURE) list. Reference: https://stackoverflow.com/a/936702
+    int obj_cnt = (int) PyList_Size(p_return);
+    if (0 > obj_cnt) {
+        Py_DECREF(p_return);
+        Py_DECREF(p_func);
+        Py_DECREF(p_module);
+        PyErr_Print();
+        fprintf(stderr, "[ERROR] Failed to Parse Call Result. Obj_Cnt < 0.\n");
+        exit(1);
+    }
+    auto obj_arr = new int[obj_cnt][LEN_BBOX_FEATURE];  // compatability alert: C++ 11 or up
+    for (int _row_idx = 0; _row_idx <= obj_cnt - 1; _row_idx++) {
+        p_temp = PyList_GetItem(p_return, _row_idx);
+        for (int _col_idx = 0; _col_idx <= LEN_BBOX_FEATURE - 1; _col_idx++) {
+            obj_arr[_row_idx][_col_idx] = (int) PyLong_AsLong(PyList_GetItem(p_temp, _col_idx));
+        }
+        Py_DECREF(p_temp);
+    }
+    printf("Result of call - (%d, %d) array:\n", obj_cnt, LEN_BBOX_FEATURE);
+    for (int _row_idx = 0; _row_idx <= obj_cnt - 1; _row_idx++) {
+        cout << "\tobj #" << _row_idx << ": (" << flush;
+        for (int _col_idx = 0; _col_idx <= LEN_BBOX_FEATURE - 1; _col_idx++) {
+            cout << obj_arr[_row_idx][_col_idx] << "," << flush;
+        }
+        cout << ")" << endl;
+    }
     Py_DECREF(p_return);
+    delete[] obj_arr;
     Py_DECREF(p_func);
     Py_DECREF(p_module);
 

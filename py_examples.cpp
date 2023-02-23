@@ -49,7 +49,7 @@ void RunPyCommand() {
 
     // shut down the interpreter
     // Py_Finalize();  // exec when func is run alone
-    cout << "==> EXIT" << endl << endl;
+    cout << "==> EXIT" << endl;
 
 }
 
@@ -83,7 +83,7 @@ void RunPyFile() {
 
     // shut down the interpreter
     // Py_Finalize();  // exec when func is run alone
-    cout << "==> EXIT" << endl << endl;
+    cout << "==> EXIT" << endl;
 
 }
 
@@ -153,7 +153,7 @@ void RunPyFileFunc() {
 
     // shut down the interpreter
     // Py_Finalize();  // exec when func is run alone
-    cout << "==> EXIT" << endl << endl;
+    cout << "==> EXIT" << endl;
 }
 
 
@@ -244,7 +244,7 @@ void RunPyFileClsFunc() {
 
     // shut down the interpreter
     // Py_Finalize();  // exec when func is run alone
-    cout << "==> EXIT" << endl << endl;
+    cout << "==> EXIT" << endl;
 
 }
 
@@ -317,7 +317,7 @@ void RunPyPassImage() {
 
     // shut down the interpreter
     // Py_Finalize();  // exec when func is run alone
-    cout << "==> EXIT" << endl << endl;
+    cout << "==> EXIT" << endl;
 
 }
 
@@ -366,7 +366,7 @@ void RunPyGetArray() {
 
     cout << "ready to call" << endl;
     // call the function
-    p_return = PyObject_CallObject(p_func, NULL);
+    p_return = PyObject_CallObject(p_func, nullptr);
     if (!p_return) {  // error handling
         Py_DECREF(p_func);
         Py_DECREF(p_module);
@@ -381,6 +381,6 @@ void RunPyGetArray() {
 
     // shut down the interpreter
     // Py_Finalize();  // exec when func is run alone
-    cout << "==> EXIT" << endl << endl;
+    cout << "==> EXIT" << endl;
 
 }

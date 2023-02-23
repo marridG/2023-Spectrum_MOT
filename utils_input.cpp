@@ -17,11 +17,13 @@ tuple<char *, int> ApproachOne();
 tuple<char *, int> ApproachTwo();
 
 tuple<char *, int> MakeImageStreamBufferFromFile() {
+    // compatability alert: C++ 11 or up
     return ApproachOne();
 }
 
 
 tuple<char *, int> ApproachOne() {
+    // compatability alert: C++ 11 or up
     // reference: https://blog.csdn.net/qq_29695701/article/details/84262492
     // [alert] Stack Overflow discourages the use of `tellg()`. per: https://stackoverflow.com/a/13394183
 
@@ -50,6 +52,7 @@ tuple<char *, int> ApproachOne() {
 }
 
 tuple<char *, int> ApproachTwo() {
+    // compatability alert: C++ 11 or up
     // reference: https://blog.csdn.net/weixin_34108829/article/details/117040951
 
     int length;

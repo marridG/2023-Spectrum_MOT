@@ -255,6 +255,7 @@ void RunPyFileClsFunc() {
 void RunPyPassImage() {
 
     // init image buffer (analog by reading from file)
+    //      compatability alert: C++ 11 or up
     char *img_buffer;
     int img_size_byte;
     tie(img_buffer, img_size_byte) = MakeImageStreamBufferFromFile();

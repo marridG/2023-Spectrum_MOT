@@ -25,20 +25,21 @@ using namespace std;
  */
 void RunPyCommand() {
 
-    // ===== initialize Python interpreter =====
-    cout << "Initializing ... " << flush;
-    Py_Initialize();
-    if (!Py_IsInitialized()) {
-        cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
-        exit(1);
-    }
-    cout << "Py-Init ... " << flush;
-    // initialize Python system directory
-    PyRun_SimpleString("import sys\n"
-                       "import os");
-    PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
-    cout << "Sys Path ... Done" << flush;
-    // PyRun_SimpleString("print(sys.path)");
+    // exec if run alone
+    // // ===== initialize Python interpreter =====
+    // cout << "Initializing ... " << flush;
+    // Py_Initialize();
+    // if (!Py_IsInitialized()) {
+    //     cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
+    //     exit(1);
+    // }
+    // cout << "Py-Init ... " << flush;
+    // // initialize Python system directory
+    // PyRun_SimpleString("import sys\n"
+    //                    "import os");
+    // PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
+    // cout << "Sys Path ... Done" << flush;
+    // // PyRun_SimpleString("print(sys.path)");
 
 
     // run a simple Python command
@@ -47,7 +48,7 @@ void RunPyCommand() {
 
 
     // shut down the interpreter
-    Py_Finalize();
+    // Py_Finalize();  // exec when func is run alone
     cout << "==> EXIT" << endl << endl;
 
 }
@@ -58,20 +59,21 @@ void RunPyCommand() {
  */
 void RunPyFile() {
 
-    // ===== initialize Python interpreter =====
-    cout << "Initializing ... " << flush;
-    Py_Initialize();
-    if (!Py_IsInitialized()) {
-        cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
-        exit(1);
-    }
-    cout << "Py-Init ... " << flush;
-    // initialize Python system directory
-    PyRun_SimpleString("import sys\n"
-                       "import os");
-    PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
-    cout << "Sys Path ... Done" << flush;
-    // PyRun_SimpleString("print(sys.path)");
+    // exec if run alone
+    // // ===== initialize Python interpreter =====
+    // cout << "Initializing ... " << flush;
+    // Py_Initialize();
+    // if (!Py_IsInitialized()) {
+    //     cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
+    //     exit(1);
+    // }
+    // cout << "Py-Init ... " << flush;
+    // // initialize Python system directory
+    // PyRun_SimpleString("import sys\n"
+    //                    "import os");
+    // PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
+    // cout << "Sys Path ... Done" << flush;
+    // // PyRun_SimpleString("print(sys.path)");
 
 
     // run a Python file
@@ -80,7 +82,7 @@ void RunPyFile() {
 
 
     // shut down the interpreter
-    Py_Finalize();
+    // Py_Finalize();  // exec when func is run alone
     cout << "==> EXIT" << endl << endl;
 
 }
@@ -91,20 +93,21 @@ void RunPyFile() {
  */
 void RunPyFileFunc() {
 
-    // ===== initialize Python interpreter =====
-    cout << "Initializing ... " << flush;
-    Py_Initialize();
-    if (!Py_IsInitialized()) {
-        cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
-        exit(1);
-    }
-    cout << "Py-Init ... " << flush;
-    // initialize Python system directory
-    PyRun_SimpleString("import sys\n"
-                       "import os");
-    PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
-    cout << "Sys Path ... Done" << flush;
-    // PyRun_SimpleString("print(sys.path)");
+    // exec if run alone
+    // // ===== initialize Python interpreter =====
+    // cout << "Initializing ... " << flush;
+    // Py_Initialize();
+    // if (!Py_IsInitialized()) {
+    //     cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
+    //     exit(1);
+    // }
+    // cout << "Py-Init ... " << flush;
+    // // initialize Python system directory
+    // PyRun_SimpleString("import sys\n"
+    //                    "import os");
+    // PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
+    // cout << "Sys Path ... Done" << flush;
+    // // PyRun_SimpleString("print(sys.path)");
 
 
     // declare pointer variables
@@ -149,7 +152,7 @@ void RunPyFileFunc() {
 
 
     // shut down the interpreter
-    Py_Finalize();
+    // Py_Finalize();  // exec when func is run alone
     cout << "==> EXIT" << endl << endl;
 }
 
@@ -158,20 +161,21 @@ void RunPyFileFunc() {
  * run a member function of an instantiated (with params) class object of a Python file
  */
 void RunPyFileClsFunc() {
-    // ===== initialize Python interpreter =====
-    cout << "Initializing ... " << flush;
-    Py_Initialize();
-    if (!Py_IsInitialized()) {
-        cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
-        exit(1);
-    }
-    cout << "Py-Init ... " << flush;
-    // initialize Python system directory
-    PyRun_SimpleString("import sys\n"
-                       "import os");
-    PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
-    cout << "Sys Path ... Done" << flush;
-    // PyRun_SimpleString("print(sys.path)");
+    // exec if run alone
+    // // ===== initialize Python interpreter =====
+    // cout << "Initializing ... " << flush;
+    // Py_Initialize();
+    // if (!Py_IsInitialized()) {
+    //     cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
+    //     exit(1);
+    // }
+    // cout << "Py-Init ... " << flush;
+    // // initialize Python system directory
+    // PyRun_SimpleString("import sys\n"
+    //                    "import os");
+    // PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
+    // cout << "Sys Path ... Done" << flush;
+    // // PyRun_SimpleString("print(sys.path)");
 
     // declare pointer variables
     PyObject *p_name, *p_module, *p_class, *p_class_obj, *p_func;
@@ -239,7 +243,7 @@ void RunPyFileClsFunc() {
 
 
     // shut down the interpreter
-    Py_Finalize();
+    // Py_Finalize();  // exec when func is run alone
     cout << "==> EXIT" << endl << endl;
 
 }
@@ -257,20 +261,21 @@ void RunPyPassImage() {
     cout << img_buffer << "=>" << img_size_byte << endl;
 
 
-    // ===== initialize Python interpreter =====
-    cout << "Initializing ... " << flush;
-    Py_Initialize();
-    if (!Py_IsInitialized()) {
-        cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
-        exit(1);
-    }
-    cout << "Py-Init ... " << flush;
-    // initialize Python system directory
-    PyRun_SimpleString("import sys\n"
-                       "import os");
-    PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
-    cout << "Sys Path ... Done" << flush;
-    // PyRun_SimpleString("print(sys.path)");
+    // exec if run alone
+    // // ===== initialize Python interpreter =====
+    // cout << "Initializing ... " << flush;
+    // Py_Initialize();
+    // if (!Py_IsInitialized()) {
+    //     cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
+    //     exit(1);
+    // }
+    // cout << "Py-Init ... " << flush;
+    // // initialize Python system directory
+    // PyRun_SimpleString("import sys\n"
+    //                    "import os");
+    // PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
+    // cout << "Sys Path ... Done" << flush;
+    // // PyRun_SimpleString("print(sys.path)");
 
     // declare pointer variables
     PyObject *p_name, *p_module, *p_class, *p_class_obj, *p_func;
@@ -311,7 +316,71 @@ void RunPyPassImage() {
     Py_DECREF(p_module);
 
     // shut down the interpreter
-    Py_Finalize();
+    // Py_Finalize();  // exec when func is run alone
+    cout << "==> EXIT" << endl << endl;
+
+}
+
+
+/**
+ * run a Python function, which returns an int-array shaped (N,4), indicating bbox
+ */
+void RunPyGetArray() {
+
+    // exec if run alone
+    // // ===== initialize Python interpreter =====
+    // cout << "Initializing ... " << flush;
+    // Py_Initialize();
+    // if (!Py_IsInitialized()) {
+    //     cout << "[ERROR] Python is NOT Properly Initialized. Exit with Error." << endl;
+    //     exit(1);
+    // }
+    // cout << "Py-Init ... " << flush;
+    // // initialize Python system directory
+    // PyRun_SimpleString("import sys\n"
+    //                    "import os");
+    // PyRun_SimpleString("sys.path.append(os.path.join(os.path.dirname(os.getcwd()), 'MOT'))");
+    // cout << "Sys Path ... Done" << flush;
+    // // PyRun_SimpleString("print(sys.path)");
+
+    // declare pointer variables
+    PyObject *p_name, *p_module, *p_class, *p_class_obj, *p_func;
+    PyObject *p_args, *p_return;
+
+    cout << "\n" << "Call a Function of a Module:" << endl;
+    // find & import module
+    p_module = PyImport_ImportModule("hello_world");
+    if (!p_module) {  // error handling
+        PyErr_Print();
+        fprintf(stderr, "[ERROR] Failed to Load Module \"%s\"\n", "hello_world");
+        exit(1);
+    }
+    // find function in module
+    p_func = PyObject_GetAttrString(p_module, "get_bbox");
+    if (!p_func || !PyCallable_Check(p_func)) {  // error handling
+        Py_DECREF(p_module);
+        PyErr_Print();
+        fprintf(stderr, "[ERROR] Failed to Load Function \"%s\"\n", "get_bbox");
+        exit(1);
+    }
+
+    cout << "ready to call" << endl;
+    // call the function
+    p_return = PyObject_CallObject(p_func, NULL);
+    if (!p_return) {  // error handling
+        Py_DECREF(p_func);
+        Py_DECREF(p_module);
+        PyErr_Print();
+        fprintf(stderr, "Call (without Args) Failed\n");
+        exit(1);
+    }
+    // printf("Result of call: \"%s\"\n", PyUnicode_AsUTF8(p_return));
+    Py_DECREF(p_return);
+    Py_DECREF(p_func);
+    Py_DECREF(p_module);
+
+    // shut down the interpreter
+    // Py_Finalize();  // exec when func is run alone
     cout << "==> EXIT" << endl << endl;
 
 }

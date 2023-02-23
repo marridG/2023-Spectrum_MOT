@@ -9,4 +9,5 @@ void RunPyFile();
 void RunPyFileFunc();
 void RunPyFileClsFunc();
 void RunPyPassImage();
+void RunPyGetArray();
 #endif //INC_202302_SPECTRUM_MOT_PY_EXAMPLES_H

@@ -1,4 +1,6 @@
 import io
+from typing import List
+import numpy as np
 from PIL import Image
 
 print("Python Scripts File - Direct Command")
@@ -36,6 +38,12 @@ def buffer_2_image_file(img_buffer: bytes):
     img = buffer_2_image(img_buffer=img_buffer)
     img.save("img1.png", "PNG")
     return "Success"
+
+
+def get_bbox() -> List[List[int]]:
+    bbox = np.arange(12).reshape(3, 4).astype(int)
+    bbox_list = bbox.tolist()
+    return bbox_list  # shaped (N,4) = (3,4)
 
 
 class ClassObject:

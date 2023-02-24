@@ -1,5 +1,6 @@
 # G
 cmake-build-debug
+MOT/data/*
 
 
 ### C++ template

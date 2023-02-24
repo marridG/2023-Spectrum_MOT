@@ -1,0 +1,16 @@
+# Folders
+__pycache__/
+build/
+*.egg-info
+
+
+# Files
+*.weights
+*.t7
+*.mp4
+*.avi
+*.so
+*.txt
+!requirements.txt
+!requirements-version-removed.txt
+!deep_sort/deep/checkpoint/ckpt.t7

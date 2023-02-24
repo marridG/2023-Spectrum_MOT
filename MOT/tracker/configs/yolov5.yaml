@@ -1,0 +1,2 @@
+YOLOV5:
+  WEIGHT: "./detector/YOLOv5/weight/0205_0500__img=1280__bs=32__ep=300.pt"

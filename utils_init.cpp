@@ -55,3 +55,46 @@ int InitPython() {
     // PyRun_SimpleString("print(sys.path)");
     return 0;
 }
+
+
+int InitOnlineTracker(PyObject *&p_module, PyObject *&p_class, PyObject *&p_class_obj) {
+
+    PyObject *p_args;
+
+    // find & import module
+    p_module = PyImport_ImportModule("hello_world");
+    if (!p_module) {  // error handling
+        PyErr_Print();
+        fprintf(stderr, "[ERROR] Failed to Load Module \"%s\"\n", "hello_world");
+        return -1;
+    }
+    // find class in module
+    p_class = PyObject_GetAttrString(p_module, "ClassObject");
+    if (!p_class || !PyCallable_Check(p_class)) {  // error handling
+        Py_DECREF(p_module);
+        PyErr_Print();
+        fprintf(stderr, "[ERROR] Failed to Load Class \"%s\"\n", "ClassObject");
+        return -1;
+    }
+    // instantiate class obj, passing args
+    string val1 = "hello";
+    int val2 = 42;
+    p_args = Py_BuildValue("si", val1.c_str(), val2);
+    p_class_obj = PyObject_CallObject(p_class, p_args);
+    Py_DECREF(p_args);
+    if (!p_class_obj) {  // error handling
+        Py_DECREF(p_class);
+        Py_DECREF(p_module);
+        PyErr_Print();
+        fprintf(stderr, "[ERROR] Failed to Instantiate an Object");
+        return -1;
+    }
+    if ((0 >= (int) Py_REFCNT(p_module)) || (0 >= (int) Py_REFCNT(p_class)) || (0 >= (int) Py_REFCNT(p_class_obj))) {
+        PyErr_Print();
+        fprintf(stderr, "[ERROR] Failed to Instantiate the Online Tracker Object\n");
+        return -1;
+    }
+
+    cout << "Online Tracker Instantiated." << endl;
+    return 0;
+}

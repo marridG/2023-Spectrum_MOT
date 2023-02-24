@@ -5,5 +5,12 @@
 
 #ifndef INC_202302_SPECTRUM_MOT_UTILS_H
 #define INC_202302_SPECTRUM_MOT_UTILS_H
+
+// init
+int InitPython();
+// destruct
+int ShutDownPython();
+
+// inputs
 std::tuple<char *, int> MakeImageStreamBufferFromFile();  // compatability alert: C++ 11 or up
 #endif //INC_202302_SPECTRUM_MOT_UTILS_H

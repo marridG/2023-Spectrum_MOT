@@ -13,6 +13,7 @@ using namespace std;
 // 1. Naming Convention: [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html#Naming)
 // 2. compatibility alert: search for "compatability alert: "
 // 3. possible improvements: search for "future: "
+// 4. other flags: search for: "path alert: "
 int main() {
 
     InitPython();

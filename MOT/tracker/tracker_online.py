@@ -17,7 +17,7 @@ from deepsort_utils.parser import get_config
 from deepsort_utils.log import get_logger
 from deepsort_utils.io import buffer_2_image, write_results
 
-os.chdir("../MOT/tracker")  # path alert
+os.chdir("../MOT/tracker")  # path alert: edit if necessary
 
 
 def parse_args():

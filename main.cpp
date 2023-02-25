@@ -11,6 +11,8 @@ using namespace std;
 // #define DEBUG
 
 // 1. Naming Convention: [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html#Naming)
+// 2. compatibility alert: search for "compatability alert: "
+// 3. possible improvements: search for "future: "
 int main() {
 
     InitPython();
@@ -34,19 +36,42 @@ int main() {
         fprintf(stderr, "[ERROR] Failed to Init Online Tracker.\n");
         return -1;
     }
-
 #ifdef DEBUG
-        // check ref count. expecting >0, >0, 1
-        cout << "(main) ref cnt: "
-             << Py_REFCNT(p_module) << "," << Py_REFCNT(p_class) << "," << Py_REFCNT(p_class_obj) << endl;
-        // // if the following codes are run, expected outputs are (0,0,0), but get (1,4,0) even iterated
-        // Py_DECREF(p_class_obj);
-        // Py_DECREF(p_class);
-        // Py_DECREF(p_module);
-        // cout << "(main) ref cnt (desrtucted): "
-        //      << Py_REFCNT(p_module) << "," << Py_REFCNT(p_class) << "," << Py_REFCNT(p_class_obj) << endl;
+    // check ref count. expecting >0, >0, 1
+    cout << "(main) ref cnt: "
+         << Py_REFCNT(p_module) << "," << Py_REFCNT(p_class) << "," << Py_REFCNT(p_class_obj) << endl;
+    // // if the following codes are run, expected outputs are (0,0,0), but get (1,4,0) even iterated
+    // Py_DECREF(p_class_obj);
+    // Py_DECREF(p_class);
+    // Py_DECREF(p_module);
+    // cout << "(main) ref cnt (desrtucted): "
+    //      << Py_REFCNT(p_module) << "," << Py_REFCNT(p_class) << "," << Py_REFCNT(p_class_obj) << endl;
 #endif
 
+
+    // init image buffer (analog by reading from file)
+    //      compatability alert: C++ 11 or up
+    char *img_buffer;  // remember to destruct!!
+    int img_size_byte;
+    tie(img_buffer, img_size_byte) = MakeImageStreamBufferFromFile();
+    cout << img_buffer << "=>" << img_size_byte << endl;
+
+    // exec detection: image ==> bbox
+    //      compatability alert: C++ 11 or up
+    auto _detect_res = detect(p_func_detect, img_buffer, img_size_byte);
+    auto obj_arr = get<0>(_detect_res);  // int(*)[obj_dim],
+    int obj_cnt = get<1>(_detect_res);
+    int obj_dim = get<2>(_detect_res);
+#ifdef DEBUG
+    printf("Detection Results - (%d, %d) array of x/y/w/h:\n", obj_cnt, obj_dim);
+    for (int _row_idx = 0; _row_idx <= obj_cnt - 1; _row_idx++) {
+        cout << "\tobj #" << _row_idx << ": (" << flush;
+        for (int _col_idx = 0; _col_idx <= obj_dim - 1; _col_idx++) {
+            cout << obj_arr[_row_idx][_col_idx] << "," << flush;
+        }
+        cout << ")" << endl;
+    }
+#endif
 
     // Py_XDECREF(p_temp);
     // Py_XDECREF(p_return);

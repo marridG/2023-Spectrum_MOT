@@ -128,6 +128,24 @@ class TrackerOnline(object):
         # bbox_xywh[:, 3:] *= 1.2
         cls_conf = cls_conf[mask]
 
+        # # [DEBUG ONLY] draw boxes for visualization
+        # if len(bbox_xywh) > 0:
+        #     img_draw = img.copy()
+        #
+        #     def _xywh_to_xyxy(_xywh):
+        #         width, height = img.shape[:2][::-1]
+        #         x, y, w, h = _xywh
+        #         x1 = max(int(x - w / 2), 0)
+        #         x2 = min(int(x + w / 2), width - 1)
+        #         y1 = max(int(y - h / 2), 0)
+        #         y2 = min(int(y + h / 2), height - 1)
+        #         return x1, y1, x2, y2
+        #
+        #     bbox_xyxy = [_xywh_to_xyxy(_xywh) for _xywh in bbox_xywh]
+        #     identities = [99 for _ in range(len(bbox_xywh))]
+        #     img_draw = draw_boxes(img_draw, bbox_xyxy, identities)
+        #     cv2.imwrite("../test-res.jpg", img_draw)
+
         # save to internal context storage
         time_end = time.time()
         time_elapsed = time_end - time_start
@@ -137,8 +155,8 @@ class TrackerOnline(object):
         self._temp_time_elapsed_accum += time_elapsed
         self._temp_crt_frame_detect_done = True
 
-        self.logger.info("time: ({:.03f}+?)s, fps: (...), detection numbers: {}, tracking numbers: (?)" \
-                         .format(time_elapsed, bbox_xywh.shape[0]))
+        self.logger.info("time: (%.4f+?)s, fps: (...), detection numbers: %d, tracking numbers: (?)"
+                         % (time_elapsed, bbox_xywh.shape[0]))
         res = bbox_xywh.tolist()
         return res
 

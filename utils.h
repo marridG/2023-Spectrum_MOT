@@ -60,7 +60,11 @@ static auto detect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byt
     PyObject *p_temp;
 
     // parse args
-    p_args = Py_BuildValue("(y#)", img_buffer, img_size_byte);
+    int is_debug = 0;  // `0` if is TRUE, `1` otherwise
+#ifdef DEBUG_UTILS_H
+    is_debug = 1;
+#endif
+    p_args = Py_BuildValue("(y#,i)", img_buffer, img_size_byte, is_debug);  // will remain typed <int> in Python
 
     // call function
     p_return = PyObject_CallObject(p_func_detect, p_args);

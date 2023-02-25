@@ -84,7 +84,7 @@ class TrackerOnline(object):
         self.detector = build_detector(cfg, use_cuda=use_cuda)
         self.deepsort = build_tracker(cfg, use_cuda=use_cuda)
         self.class_names = self.detector.class_names
-        self.crt_frame_idx = 0
+        self.crt_frame_idx = -1
         # for internal context storage: detection-call -> tracking-call
         self._temp_crt_frame_detect_done = False
         self._temp_crt_frame_img = None
@@ -109,7 +109,7 @@ class TrackerOnline(object):
         if exc_type:
             print(exc_type, exc_value, exc_traceback)
 
-    def _detect(self, img: np.ndarray) -> List[List[int]]:
+    def _detect(self, img: np.ndarray, is_debug: bool = False) -> List[List[int]]:
         assert self._temp_crt_frame_detect_done is False, "[ERROR] Detection already Applied to the Current Frame."
 
         self.crt_frame_idx += 1
@@ -128,23 +128,25 @@ class TrackerOnline(object):
         # bbox_xywh[:, 3:] *= 1.2
         cls_conf = cls_conf[mask]
 
-        # # [DEBUG ONLY] draw boxes for visualization
-        # if len(bbox_xywh) > 0:
-        #     img_draw = img.copy()
-        #
-        #     def _xywh_to_xyxy(_xywh):
-        #         width, height = img.shape[:2][::-1]
-        #         x, y, w, h = _xywh
-        #         x1 = max(int(x - w / 2), 0)
-        #         x2 = min(int(x + w / 2), width - 1)
-        #         y1 = max(int(y - h / 2), 0)
-        #         y2 = min(int(y + h / 2), height - 1)
-        #         return x1, y1, x2, y2
-        #
-        #     bbox_xyxy = [_xywh_to_xyxy(_xywh) for _xywh in bbox_xywh]
-        #     identities = [99 for _ in range(len(bbox_xywh))]
-        #     img_draw = draw_boxes(img_draw, bbox_xyxy, identities)
-        #     cv2.imwrite("../test-res.jpg", img_draw)
+        # [DEBUG ONLY] draw boxes for visualization
+        if (is_debug is True) and (len(bbox_xywh) > 0):
+            img_draw = img.copy()
+
+            def _xywh_to_xyxy(_xywh):
+                width, height = img.shape[:2][::-1]
+                x, y, w, h = _xywh
+                x1 = max(int(x - w / 2), 0)
+                x2 = min(int(x + w / 2), width - 1)
+                y1 = max(int(y - h / 2), 0)
+                y2 = min(int(y + h / 2), height - 1)
+                return x1, y1, x2, y2
+
+            bbox_xyxy = [_xywh_to_xyxy(_xywh) for _xywh in bbox_xywh]
+            identities = [99 for _ in range(len(bbox_xywh))]
+            img_draw = draw_boxes(img_draw, bbox_xyxy, identities)
+            path = "../test-res-detect__frame=%d.jpg" % self.crt_frame_idx
+            cv2.imwrite(path, img_draw)
+            print("\tSaved Debug Detection Result to: %s" % path)
 
         # save to internal context storage
         time_end = time.time()
@@ -155,17 +157,18 @@ class TrackerOnline(object):
         self._temp_time_elapsed_accum += time_elapsed
         self._temp_crt_frame_detect_done = True
 
-        self.logger.info("time: (%.4f+?)s, fps: (...), detection numbers: %d, tracking numbers: (?)"
-                         % (time_elapsed, bbox_xywh.shape[0]))
+        self.logger.info("time: (%.4f+?)s, fps: (?<%.3f), detection numbers: %d, tracking numbers: (?)"
+                         % (time_elapsed, 1. / time_elapsed, bbox_xywh.shape[0]))
         res = bbox_xywh.tolist()
         return res
 
-    def detect(self, img_buffer: bytes) -> List[List[int]]:
+    def detect(self, img_buffer: bytes, is_debug: int = 0) -> List[List[int]]:
+        is_debug = bool(is_debug)  # forceful type cast
         if self._temp_crt_frame_detect_done is True:
             raise AssertionError("Cannot Apply Detection on Detection-Handled Frame Image. Please Call `track()`.")
 
-        img = buffer_2_image(img_buffer=img_buffer, is_debug=False)
-        return self._detect(img=img)
+        img = buffer_2_image(img_buffer=img_buffer, is_debug=is_debug)
+        return self._detect(img=img, is_debug=is_debug)
 
     def _track(self):
         pass

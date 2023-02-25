@@ -256,7 +256,7 @@ void RunPyPassImage() {
 
     // init image buffer (analog by reading from file)
     //      compatability alert: C++ 11 or up
-    char *img_buffer;
+    char *img_buffer;  // remember to destruct!!
     int img_size_byte;
     tie(img_buffer, img_size_byte) = MakeImageStreamBufferFromFile();
     cout << img_buffer << "=>" << img_size_byte << endl;
@@ -286,6 +286,7 @@ void RunPyPassImage() {
     // find & import module
     p_module = PyImport_ImportModule("hello_world");
     if (!p_module) {  // error handling
+        delete[] img_buffer;
         PyErr_Print();
         fprintf(stderr, "[ERROR] Failed to Load Module \"%s\"\n", "hello_world");
         exit(1);
@@ -293,6 +294,7 @@ void RunPyPassImage() {
     // find function in module
     p_func = PyObject_GetAttrString(p_module, "buffer_2_image_file");
     if (!p_func || !PyCallable_Check(p_func)) {  // error handling
+        delete[] img_buffer;
         Py_DECREF(p_module);
         PyErr_Print();
         fprintf(stderr, "[ERROR] Failed to Load Function \"%s\" (of Module \"%s\")\n", "do",
@@ -305,6 +307,7 @@ void RunPyPassImage() {
     p_return = PyObject_CallObject(p_func, p_args);
     Py_DECREF(p_args);
     if (!p_return) {  // error handling
+        delete[] img_buffer;
         Py_DECREF(p_func);
         Py_DECREF(p_module);
         PyErr_Print();
@@ -312,6 +315,7 @@ void RunPyPassImage() {
         exit(1);
     }
     printf("Result of call: \"%s\"\n", PyUnicode_AsUTF8(p_return));
+    delete[] img_buffer;
     Py_DECREF(p_return);
     Py_DECREF(p_func);
     Py_DECREF(p_module);

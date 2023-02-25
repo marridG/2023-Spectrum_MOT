@@ -103,7 +103,7 @@ static auto detect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byt
         std::cout << ")" << std::endl;
     }
     // view GT by:
-    //  1. copy ~/MOT/test.jpg to ~/MOT/tracker/detector/YOLOv5/text.jpg
+    //  1. copy ~/test.jpg to ~/MOT/tracker/detector/YOLOv5/text.jpg
     //  2. cd to: ~/MOT/tracker/detector/YOLOv5/
     //  3. run: python detect.py --weights weight/0205_0500__img\=1280__bs\=32__ep\=300.pt --source test.jpg --save-txt --save-conf
     //  4. view bbox in: runs/detect/exp*/test.jpg

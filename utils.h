@@ -7,7 +7,7 @@
 #include<tuple>  // compatability alert: C++ 11 or up
 #include <iostream>
 
-#define DEBUG
+#define DEBUG_UTILS_H
 
 
 #ifndef INC_202302_SPECTRUM_MOT_UTILS_H
@@ -93,7 +93,7 @@ static auto detect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byt
     }
     Py_DECREF(p_return);
 
-#ifdef DEBUG
+#ifdef DEBUG_UTILS_H
     printf("Result of call - (%d, %d) array of x/y/w/h:\n", obj_cnt, DIM_BBOX_FEATURE);
     for (int _row_idx = 0; _row_idx <= obj_cnt - 1; _row_idx++) {
         std::cout << "\tobj #" << _row_idx << ": (" << std::flush;

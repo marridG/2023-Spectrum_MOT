@@ -327,6 +327,8 @@ void RunPyPassImage() {
  * run a Python function, which returns an int-array shaped (N,4), indicating bbox
  */
 void RunPyGetArray() {
+    // reference: https://stackoverflow.com/a/936702 -> https://stackoverflow.com/a/16239446
+
     static const int LEN_BBOX_FEATURE = 4;
 
     // exec if run alone

@@ -122,4 +122,6 @@ static auto detect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byt
 
 // inputs
 std::tuple<char *, int> MakeImageStreamBufferFromFile();  // compatability alert: C++ 11 or up
+std::tuple<char *, int> MakeImageStreamBufferFromFile(
+        const std::string &img_path);  // compatability alert: C++ 11 or up
 #endif //INC_202302_SPECTRUM_MOT_UTILS_H

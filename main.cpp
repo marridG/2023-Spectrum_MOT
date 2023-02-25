@@ -53,7 +53,7 @@ int main() {
     //      compatability alert: C++ 11 or up
     char *img_buffer;  // remember to destruct!!
     int img_size_byte;
-    tie(img_buffer, img_size_byte) = MakeImageStreamBufferFromFile();
+    tie(img_buffer, img_size_byte) = MakeImageStreamBufferFromFile("../../test.jpg");
     cout << img_buffer << "=>" << img_size_byte << endl;
 
     // exec detection: image ==> bbox

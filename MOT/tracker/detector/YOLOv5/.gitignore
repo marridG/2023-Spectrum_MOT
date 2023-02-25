@@ -64,6 +64,7 @@ VOC/
 darknet53.conv.74
 yolov3-tiny.conv.15
 !yolov5s.pt
+!yolov5n.pt
 !weight/best.pt
 
 # GitHub Python GitIgnore ----------------------------------------------------------------------------------------------

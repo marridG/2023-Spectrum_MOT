@@ -1,8 +1,34 @@
 import os
+import io
 from typing import Dict
 import numpy as np
+from PIL import Image
+import cv2
+
 
 # from utils.log import get_logger
+
+def buffer_2_image(img_buffer: bytes, is_debug: bool = False) -> np.ndarray:
+    """
+    for the binary buffer of a given image, convert to a <PIL.Image> object
+    :param img_buffer:      image binary buffer, typed <bytes>
+    :param is_debug:        flag indicating whether is debug mode. `True` if so, `False` otherwise
+    :return:                OpenCV format image
+    """
+    # Reference: https://stackoverflow.com/a/32908899
+
+    if is_debug is True:
+        print("buffer:", type(img_buffer), len(img_buffer))
+    img_pil = Image.open(io.BytesIO(img_buffer)).convert("RGB")
+    # noinspection PyTypeChecker
+    img_cv = np.array(img_pil)
+    img_cv = cv2.cvtColor(img_cv, cv2.COLOR_RGB2BGR)
+
+    if is_debug is True:
+        img_pil.show(title="Image - PIL")
+        cv2.imshow("Image - OpenCV", img_cv)
+        cv2.waitKey()
+    return img_cv
 
 
 def write_results(filename, results, data_type):

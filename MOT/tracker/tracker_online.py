@@ -15,7 +15,7 @@ from deep_sort import build_tracker
 from deepsort_utils.draw import draw_boxes
 from deepsort_utils.parser import get_config
 from deepsort_utils.log import get_logger
-from deepsort_utils.io import write_results
+from deepsort_utils.io import buffer_2_image, write_results
 
 os.chdir("../MOT/tracker")  # path alert
 
@@ -84,6 +84,13 @@ class TrackerOnline(object):
         self.detector = build_detector(cfg, use_cuda=use_cuda)
         self.deepsort = build_tracker(cfg, use_cuda=use_cuda)
         self.class_names = self.detector.class_names
+        self.crt_frame_idx = 0
+        # for internal context storage: detection-call -> tracking-call
+        self._temp_crt_frame_detect_done = False
+        self._temp_crt_frame_img = None
+        self._temp_crt_frame_bbox_xywh = None
+        self._temp_crt_frame_cls_conf = None
+        self._temp_time_elapsed_accum = 0.  # in seconds
 
     def __enter__(self):
 
@@ -101,6 +108,54 @@ class TrackerOnline(object):
     def __exit__(self, exc_type, exc_value, exc_traceback):
         if exc_type:
             print(exc_type, exc_value, exc_traceback)
+
+    def _detect(self, img: np.ndarray) -> List[List[int]]:
+        assert self._temp_crt_frame_detect_done is False, "[ERROR] Detection already Applied to the Current Frame."
+
+        self.crt_frame_idx += 1
+        time_start = time.time()
+        img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        # do detection
+        bbox_xywh, cls_conf, cls_ids = self.detector(img_rgb)
+
+        # # select classes: 2=car, 5=bus, 7=truck
+        # mask = (cls_ids == 2) | (cls_ids == 5) | (cls_ids == 7)
+        mask = (0 == cls_ids)  # ALERT
+
+        bbox_xywh = bbox_xywh[mask].astype(int)
+        # # bbox dilation just in case bbox too small, delete this line if using a better pedestrian detector
+        # bbox_xywh[:, 3:] *= 1.2
+        cls_conf = cls_conf[mask]
+
+        # save to internal context storage
+        time_end = time.time()
+        time_elapsed = time_end - time_start
+        self._temp_crt_frame_img = img_rgb
+        self._temp_crt_frame_bbox_xywh = bbox_xywh
+        self._temp_crt_frame_cls_conf = cls_conf
+        self._temp_time_elapsed_accum += time_elapsed
+        self._temp_crt_frame_detect_done = True
+
+        self.logger.info("time: ({:.03f}+?)s, fps: (...), detection numbers: {}, tracking numbers: (?)" \
+                         .format(time_elapsed, bbox_xywh.shape[0]))
+        res = bbox_xywh.tolist()
+        return res
+
+    def detect(self, img_buffer: bytes) -> List[List[int]]:
+        if self._temp_crt_frame_detect_done is True:
+            raise AssertionError("Cannot Apply Detection on Detection-Handled Frame Image. Please Call `track()`.")
+
+        img = buffer_2_image(img_buffer=img_buffer, is_debug=False)
+        return self._detect(img=img)
+
+    def _track(self):
+        pass
+
+    def track(self):
+        if self._temp_crt_frame_detect_done is False:
+            raise AssertionError("Cannot Apply Tracking on Detection-NOT-Handled Frame Image. Please Call `detect()`.")
+        return self._track()
 
 # def run(self):
 #     results = []

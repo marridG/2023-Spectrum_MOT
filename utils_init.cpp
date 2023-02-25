@@ -59,29 +59,29 @@ int InitPython() {
 
 int InitOnlineTracker(PyObject *&p_module, PyObject *&p_class, PyObject *&p_class_obj) {
 
-    PyObject *p_args;
-
     // find & import module
-    p_module = PyImport_ImportModule("hello_world");
+    p_module = PyImport_ImportModule("tracker_online");
     if (!p_module) {  // error handling
         PyErr_Print();
-        fprintf(stderr, "[ERROR] Failed to Load Module \"%s\"\n", "hello_world");
+        fprintf(stderr, "[ERROR] Failed to Load Module \"%s\"\n", "tracker_online");
         return -1;
     }
     // find class in module
-    p_class = PyObject_GetAttrString(p_module, "ClassObject");
+    p_class = PyObject_GetAttrString(p_module, "TrackerOnline");
     if (!p_class || !PyCallable_Check(p_class)) {  // error handling
         Py_DECREF(p_module);
         PyErr_Print();
-        fprintf(stderr, "[ERROR] Failed to Load Class \"%s\"\n", "ClassObject");
+        fprintf(stderr, "[ERROR] Failed to Load Class \"%s\"\n", "TrackerOnline");
         return -1;
     }
     // instantiate class obj, passing args
-    string val1 = "hello";
-    int val2 = 42;
-    p_args = Py_BuildValue("si", val1.c_str(), val2);
-    p_class_obj = PyObject_CallObject(p_class, p_args);
-    Py_DECREF(p_args);
+    // PyObject *p_args;
+    // string val1 = "hello";
+    // int val2 = 42;
+    // p_args = Py_BuildValue("si", val1.c_str(), val2);
+    // p_class_obj = PyObject_CallObject(p_class, p_args);
+    // Py_DECREF(p_args);
+    p_class_obj = PyObject_CallObject(p_class, nullptr);
     if (!p_class_obj) {  // error handling
         Py_DECREF(p_class);
         Py_DECREF(p_module);

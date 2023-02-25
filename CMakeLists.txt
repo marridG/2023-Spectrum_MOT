@@ -12,5 +12,15 @@ set(CMAKE_CXX_STANDARD 14)
 # reference: https://stackoverflow.com/a/72162717
 find_package(Python REQUIRED Development)
 
-add_executable(202302_Spectrum_MOT main.cpp utils_input.cpp utils.h py_examples.cpp py_examples.h utils_init.cpp utils_destruct.cpp)
+add_executable(
+        202302_Spectrum_MOT
+        main.cpp
+        # hands-on Python examples
+        py_examples.h py_examples.cpp
+        # utils
+        utils.h
+        utils_input.cpp
+        utils_init.cpp
+        utils_destruct.cpp
+)
 target_link_libraries(202302_Spectrum_MOT PRIVATE Python::Python)

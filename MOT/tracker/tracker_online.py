@@ -167,7 +167,7 @@ class TrackerOnline(object):
         if self._temp_crt_frame_detect_done is True:
             raise AssertionError("Cannot Apply Detection on Detection-Handled Frame Image. Please Call `track()`.")
 
-        img = buffer_2_image(img_buffer=img_buffer, is_debug=is_debug)
+        img = buffer_2_image(img_buffer=img_buffer, is_debug=False)
         return self._detect(img=img, is_debug=is_debug)
 
     def _track(self):

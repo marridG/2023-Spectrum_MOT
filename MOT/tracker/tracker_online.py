@@ -84,24 +84,26 @@ class TrackerOnline(object):
         self.detector = build_detector(cfg, use_cuda=use_cuda)
         self.deepsort = build_tracker(cfg, use_cuda=use_cuda)
         self.class_names = self.detector.class_names
-        self.crt_frame_idx = -1
-        # for internal context storage: detection-call -> tracking-call
-        self._temp_crt_frame_detect_done = False
-        self._temp_crt_frame_img = None
-        self._temp_crt_frame_bbox_xywh = None
-        self._temp_crt_frame_cls_conf = None
-        self._temp_time_elapsed_accum = 0.  # in seconds
-
-    def __enter__(self):
 
         if self.args.save_path:
             os.makedirs(self.args.save_path, exist_ok=True)
 
             # path of saved video and results
-            self.save_results_path = os.path.join(self.args.save_path, "results__frame=%d.png")
+            self.res_path_template_detect = os.path.join(self.args.save_path, "results-detect__frame=%d.png")
+            self.res_path_template_track = os.path.join(self.args.save_path, "results-track__frame=%d.png")
 
             # logging
             self.logger.info("Save results to {}".format(self.args.save_path))
+
+        self.crt_frame_idx = -1
+        # for internal context storage: detection-call -> tracking-call
+        self._temp_crt_frame_detect_done = False
+        self._temp_crt_frame_img_rgb = None
+        self._temp_crt_frame_bbox_xywh = None
+        self._temp_crt_frame_cls_conf = None
+        self._temp_time_elapsed_accum = 0.  # in seconds
+
+    def __enter__(self):
 
         return self
 
@@ -144,14 +146,14 @@ class TrackerOnline(object):
             bbox_xyxy = [_xywh_to_xyxy(_xywh) for _xywh in bbox_xywh]
             identities = [99 for _ in range(len(bbox_xywh))]
             img_draw = draw_boxes(img_draw, bbox_xyxy, identities)
-            path = "../test-res-detect__frame=%d.jpg" % self.crt_frame_idx
+            path = self.res_path_template_detect % self.crt_frame_idx
             cv2.imwrite(path, img_draw)
             print("\tSaved Debug Detection Result to: %s" % path)
 
         # save to internal context storage
         time_end = time.time()
         time_elapsed = time_end - time_start
-        self._temp_crt_frame_img = img_rgb
+        self._temp_crt_frame_img_rgb = img_rgb
         self._temp_crt_frame_bbox_xywh = bbox_xywh
         self._temp_crt_frame_cls_conf = cls_conf
         self._temp_time_elapsed_accum += time_elapsed
@@ -163,6 +165,7 @@ class TrackerOnline(object):
         return res
 
     def detect(self, img_buffer: bytes, is_debug: int = 0) -> List[List[int]]:
+        print("is debug:", is_debug)
         is_debug = bool(is_debug)  # forceful type cast
         if self._temp_crt_frame_detect_done is True:
             raise AssertionError("Cannot Apply Detection on Detection-Handled Frame Image. Please Call `track()`.")
@@ -170,13 +173,72 @@ class TrackerOnline(object):
         img = buffer_2_image(img_buffer=img_buffer, is_debug=False)
         return self._detect(img=img, is_debug=is_debug)
 
-    def _track(self):
-        pass
+    def _track(self, is_debug: bool = False) -> List[List[int]]:
+        time_start = time.time()
 
-    def track(self):
+        # get internal context storage
+        bbox_xywh = self._temp_crt_frame_bbox_xywh
+        cls_conf = self._temp_crt_frame_cls_conf
+        img_rgb = self._temp_crt_frame_img_rgb
+
+        # do tracking
+        outputs = self.deepsort.update(bbox_xywh=bbox_xywh, confidences=cls_conf, ori_img=img_rgb)
+
+        # parse result
+        res = []
+        if len(outputs) > 0:
+            bbox_xyxy = outputs[:, :4]
+            identities = outputs[:, -1]
+            for _bbox_idx, _bbox_xyxy in enumerate(bbox_xyxy):
+                _bbox_track_id = identities[_bbox_idx]
+                if _bbox_track_id < 0:
+                    continue
+                _bbox_tlwh = self.deepsort._xyxy_to_tlwh(_bbox_xyxy)
+                res.append([_bbox_tlwh[0], _bbox_tlwh[1], _bbox_tlwh[2], _bbox_tlwh[3], _bbox_track_id])
+
+        # update internal context storage
+        self._temp_crt_frame_detect_done = False
+        self._temp_crt_frame_img_rgb = None
+        self._temp_crt_frame_cls_conf = None
+        self._temp_crt_frame_bbox_xywh = None
+        time_elapsed_detect = self._temp_time_elapsed_accum
+        self._temp_time_elapsed_accum = 0.
+        # time
+        time_end = time.time()
+        time_elapsed_track = time_end - time_start
+        time_elapsed_all = time_elapsed_detect + time_elapsed_track
+
+        # draw boxes for visualization
+        if (is_debug is True) and (len(outputs) > 0):
+            img_draw = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
+            bbox_xyxy = outputs[:, :4]
+            identities = outputs[:, -1]
+            img_draw = draw_boxes(img_draw, bbox_xyxy, identities)
+            path = self.res_path_template_track % self.crt_frame_idx
+            cv2.imwrite(path, img_draw)
+            print("\tSaved Debug Detection Result to: %s" % path)
+
+        # if self.args.save_path:
+        #     self.writer.write(ori_im)
+
+        # logging
+        self.logger.info(
+            "time: (%.3f+%.3f = %.3f)s, fps: (%.3f), detection numbers: %d, tracking numbers: %d"
+            % (time_elapsed_detect, time_elapsed_track, time_elapsed_all, 1. / time_elapsed_all,
+               bbox_xywh.shape[0], len(outputs))
+        )
+        return res
+
+    def track(self, is_debug: int = 0) -> List[List[int]]:
+        """
+        exec tracking (after detection)
+        :param is_debug:    debug flag. `true` if so, `false` otherwise
+        :return:            [ (x_top_left, y_top_left, width, height, track_id), ...]
+        """
+        is_debug = bool(is_debug)  # forceful type cast
         if self._temp_crt_frame_detect_done is False:
             raise AssertionError("Cannot Apply Tracking on Detection-NOT-Handled Frame Image. Please Call `detect()`.")
-        return self._track()
+        return self._track(is_debug=is_debug)
 
 # def run(self):
 #     results = []

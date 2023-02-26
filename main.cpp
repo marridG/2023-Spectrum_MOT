@@ -49,7 +49,7 @@ int main() {
     //      << Py_REFCNT(p_module) << "," << Py_REFCNT(p_class) << "," << Py_REFCNT(p_class_obj) << endl;
 #endif
 
-    for (int i = 0; i <= 5; i++) {
+    for (int i = 0; i <= 4; i++) {
 
         // init image buffer (analog by reading from file)
         //      compatability alert: C++ 11 or up

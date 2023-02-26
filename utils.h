@@ -97,13 +97,18 @@ static auto detect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byt
     Py_DECREF(p_return);
 
 #ifdef DEBUG_UTILS_H
-    printf("Result of call - (%d, %d) array of x/y/w/h:\n", obj_cnt, DIM_BBOX_FEATURE);
-    for (int _row_idx = 0; _row_idx <= obj_cnt - 1; _row_idx++) {
-        std::cout << "\tobj #" << _row_idx << ": (" << std::flush;
-        for (int _col_idx = 0; _col_idx <= DIM_BBOX_FEATURE - 1; _col_idx++) {
-            std::cout << obj_arr[_row_idx][_col_idx] << "," << std::flush;
+    printf("[DETECT] Result of call - (%d, %d) array of x/y/w/h:\n", obj_cnt, DIM_BBOX_FEATURE);
+    if (0 >= obj_cnt) {
+        std::cout << "\t===== NO DETECTED OBJECTS =====" << std::endl;
+    }
+    else {
+        for (int _row_idx = 0; _row_idx <= obj_cnt - 1; _row_idx++) {
+            std::cout << "\tobj #" << _row_idx << ": (" << std::flush;
+            for (int _col_idx = 0; _col_idx <= DIM_BBOX_FEATURE - 1; _col_idx++) {
+                std::cout << obj_arr[_row_idx][_col_idx] << "," << std::flush;
+            }
+            std::cout << ")" << std::endl;
         }
-        std::cout << ")" << std::endl;
     }
     // view GT by:
     //  1. copy ~/test.jpg to ~/MOT/tracker/detector/YOLOv5/test.jpg
@@ -196,13 +201,19 @@ static auto track(PyObject *&p_func_track) {
     Py_DECREF(p_return);
 
 #ifdef DEBUG_UTILS_H
-    printf("[TRACK] Result of call - (%d, %d) array of x_top_left/y_top_left/w/h/id:\n", obj_cnt, DIM_TRACK_OBJ_FEATURE);
-    for (int _row_idx = 0; _row_idx <= obj_cnt - 1; _row_idx++) {
-        std::cout << "\tobj #" << _row_idx << ": (" << std::flush;
-        for (int _col_idx = 0; _col_idx <= DIM_TRACK_OBJ_FEATURE - 1; _col_idx++) {
-            std::cout << obj_arr[_row_idx][_col_idx] << "," << std::flush;
+    printf("[TRACK] Result of call - (%d, %d) array of x_top_left/y_top_left/w/h/id:\n", obj_cnt,
+           DIM_TRACK_OBJ_FEATURE);
+    if (0 >= obj_cnt) {
+        std::cout << "\t===== NO TRACKED OBJECTS =====" << std::endl;
+    }
+    else {
+        for (int _row_idx = 0; _row_idx <= obj_cnt - 1; _row_idx++) {
+            std::cout << "\tobj #" << _row_idx << ": (" << std::flush;
+            for (int _col_idx = 0; _col_idx <= DIM_TRACK_OBJ_FEATURE - 1; _col_idx++) {
+                std::cout << obj_arr[_row_idx][_col_idx] << "," << std::flush;
+            }
+            std::cout << ")" << std::endl;
         }
-        std::cout << ")" << std::endl;
     }
 #endif
 

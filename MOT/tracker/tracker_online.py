@@ -218,7 +218,7 @@ class TrackerOnline(object):
                 img_draw = draw_boxes(img_draw, bbox_xyxy, identities)
             path = self.res_path_template_track % self.crt_frame_idx
             cv2.imwrite(path, img_draw)
-            print("\tSaved Debug Detection Result to: %s" % path)
+            print("\tSaved Debug Tracking Result to: %s" % path)
 
         # if self.args.save_path:
         #     self.writer.write(ori_im)

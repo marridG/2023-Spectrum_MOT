@@ -177,7 +177,7 @@ class TrackerOnline(object):
         img = buffer_2_image(img_buffer=img_buffer, is_debug=False)
         return self._detect(img=img, is_debug=is_debug)
 
-    def _track(self, is_debug: bool = False) -> List[List[int]]:
+    def _track_sim(self, is_debug: bool = False) -> List[List[int]]:
         time_start = time.time()
 
         # get internal context storage
@@ -234,7 +234,7 @@ class TrackerOnline(object):
         )
         return res
 
-    def track(self, is_debug: int = 0) -> List[List[int]]:
+    def track_sim(self, is_debug: int = 0) -> List[List[int]]:
         """
         exec tracking (after detection)
         :param is_debug:    debug flag. `true` if so, `false` otherwise
@@ -243,7 +243,7 @@ class TrackerOnline(object):
         is_debug = bool(is_debug)  # forceful type cast
         if self._temp_crt_frame_detect_done is False:
             raise AssertionError("Cannot Apply Tracking on Detection-NOT-Handled Frame Image. Please Call `detect()`.")
-        return self._track(is_debug=is_debug)
+        return self._track_sim(is_debug=is_debug)
 
 # def run(self):
 #     results = []

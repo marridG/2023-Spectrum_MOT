@@ -75,9 +75,9 @@ int main() {
         }
 #endif
 
-        // exec track
+        // exec track - simulated
         //      compatability alert: C++ 11 or up
-        auto _track_res = ExecTrack(p_func_track);
+        auto _track_res = ExecTrackSim(p_func_track);
         auto track_obj_arr = get<0>(_track_res);  // int(*)[obj_dim],
         int track_obj_cnt = get<1>(_track_res);
         int track_obj_dim = get<2>(_track_res);

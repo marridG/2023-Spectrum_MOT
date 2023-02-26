@@ -138,7 +138,7 @@ int InitOnlineTracker(PyObject *&p_module, PyObject *&p_class, PyObject *&p_clas
     }
     cout << "Detection Function Located ... " << flush;
     // find func: tracking
-    p_func_track = PyObject_GetAttrString(p_class_obj, "track");
+    p_func_track = PyObject_GetAttrString(p_class_obj, "track_sim");
     if (!p_func_track || !PyCallable_Check(p_func_track)) {  // error handling
         Py_DECREF(p_func_detect);
         Py_DECREF(p_class_obj);

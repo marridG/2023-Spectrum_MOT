@@ -92,6 +92,7 @@ class TrackerOnline(object):
             self.res_path_debug = os.path.join(self.args.save_path, "img_res_debug")
             os.makedirs(self.res_path_debug, exist_ok=True)
             self.res_path_debug_detect = os.path.join(self.res_path_debug, "results__frame=%d__detect.jpg")
+            self.res_path_debug_detect_obj = os.path.join(self.res_path_debug, "temp_res__frame=%d__detect-obj=%d.jpg")
             self.res_path_debug_track = os.path.join(self.res_path_debug, "results__frame=%d__track.jpg")
 
             # logging
@@ -144,6 +145,27 @@ class TrackerOnline(object):
         time_elapsed = time_end - time_start
         self._temp_time_elapsed_accum += time_elapsed
         self._temp_crt_frame_detect_done = True
+
+        # [DEBUG ONLY] save detected objs
+        if is_debug is True:
+            img_draw = img.copy()
+            if len(bbox_xywh) > 0:
+                def _xywh_to_xyxy(_xywh):
+                    width, height = img.shape[:2][::-1]
+                    x, y, w, h = _xywh
+                    x1 = max(int(x - w / 2), 0)
+                    x2 = min(int(x + w / 2), width - 1)
+                    y1 = max(int(y - h / 2), 0)
+                    y2 = min(int(y + h / 2), height - 1)
+                    return x1, y1, x2, y2
+
+                bbox_xyxy = [_xywh_to_xyxy(_xywh) for _xywh in bbox_xywh]
+                for _bbox_idx, _bbox_xyxy in enumerate(bbox_xyxy):
+                    _x_min, _y_min, _x_max, _y_max = _bbox_xyxy
+                    _crop = img[_y_min:_y_max, _x_min:_x_max, :]
+                    path = self.res_path_debug_detect_obj % (self.crt_frame_idx, _bbox_idx)
+                    cv2.imwrite(path, _crop)
+            print("\tSaved %d Debug Detected Objects" % len(bbox_xywh))
 
         # [DEBUG ONLY] draw boxes for visualization
         if is_debug is True:

@@ -89,8 +89,10 @@ class TrackerOnline(object):
             os.makedirs(self.args.save_path, exist_ok=True)
 
             # path of saved video and results
-            self.res_path_template_detect = os.path.join(self.args.save_path, "results__frame=%d__detect.jpg")
-            self.res_path_template_track = os.path.join(self.args.save_path, "results__frame=%d__track.jpg")
+            self.res_path_debug = os.path.join(self.args.save_path, "img_res_debug")
+            os.makedirs(self.res_path_debug, exist_ok=True)
+            self.res_path_debug_detect = os.path.join(self.res_path_debug, "results__frame=%d__detect.jpg")
+            self.res_path_debug_track = os.path.join(self.res_path_debug, "results__frame=%d__track.jpg")
 
             # logging
             self.logger.info("Save results to {}".format(self.args.save_path))
@@ -159,7 +161,7 @@ class TrackerOnline(object):
                 bbox_xyxy = [_xywh_to_xyxy(_xywh) for _xywh in bbox_xywh]
                 identities = [99 for _ in range(len(bbox_xywh))]
                 img_draw = draw_boxes(img_draw, bbox_xyxy, identities)
-            path = self.res_path_template_detect % self.crt_frame_idx
+            path = self.res_path_debug_detect % self.crt_frame_idx
             cv2.imwrite(path, img_draw)
             print("\tSaved Debug Detection Result to: %s" % path)
 
@@ -217,7 +219,7 @@ class TrackerOnline(object):
                 bbox_xyxy = outputs[:, :4]
                 identities = outputs[:, -1]
                 img_draw = draw_boxes(img_draw, bbox_xyxy, identities)
-            path = self.res_path_template_track % self.crt_frame_idx
+            path = self.res_path_debug_track % self.crt_frame_idx
             cv2.imwrite(path, img_draw)
             print("\tSaved Debug Tracking Result to: %s" % path)
 

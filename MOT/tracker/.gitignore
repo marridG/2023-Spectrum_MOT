@@ -14,4 +14,4 @@ build/
 !requirements.txt
 !requirements-version-removed.txt
 !deep_sort/deep/checkpoint/ckpt.t7
-output/results__*.jpg
+output/img_res_debug/

@@ -39,7 +39,7 @@ int ShutDownPython();
  *                          <ul>
  *                              <li><b>#1</b>: an allocated `char(*)[LEN_BBOX_FEATURE=4]` instance,
  *                                  representing a 2d-array shaped (cnt_obj, dim_feature),
- *                                  with features as (x,y,w,h).
+ *                                  with features as (x_top_left,y_top_left,w,h).
  *                                  if successful, cnt_obj>=0; if otherwise, cnt_obj==0</li>
  *                              <li><b>#2</b>: cnt of objs detected, for 2d-array-iteration.
  *                                  if successful, value=cnt-array-rows; if otherwise, value<0 </li>
@@ -53,7 +53,7 @@ static auto detect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byt
     //  variable-length array: https://stackoverflow.com/a/936702 -> https://stackoverflow.com/a/16239446
 
     // dim of the features representing a bounding-box
-    static const int DIM_BBOX_FEATURE = 4;  // 4=x/y/w/h
+    static const int DIM_BBOX_FEATURE = 4;  // 4=x_top_left/y_top_left/w/h
     // local Python objects pointers
     PyObject *p_args, *p_return;
     PyObject *p_temp;
@@ -97,7 +97,7 @@ static auto detect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byt
     Py_DECREF(p_return);
 
 #ifdef DEBUG_UTILS_H
-    printf("[DETECT] Result of call - (%d, %d) array of x/y/w/h:\n", obj_cnt, DIM_BBOX_FEATURE);
+    printf("[DETECT] Result of call - (%d, %d) array of x_top_left/y_top_left/w/h:\n", obj_cnt, DIM_BBOX_FEATURE);
     if (0 >= obj_cnt) {
         std::cout << "\t===== NO DETECTED OBJECTS =====" << std::endl;
     }

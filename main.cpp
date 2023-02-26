@@ -65,7 +65,7 @@ int main() {
         int obj_cnt = get<1>(_detect_res);
         int obj_dim = get<2>(_detect_res);
 #ifdef DEBUG
-        printf("Detection Results - (%d, %d) array of x/y/w/h:\n", obj_cnt, obj_dim);
+        printf("Detection Results - (%d, %d) array of x_top_left/y_top_left/w/h:\n", obj_cnt, obj_dim);
         for (int _row_idx = 0; _row_idx <= obj_cnt - 1; _row_idx++) {
             cout << "\tobj #" << _row_idx << ": (" << flush;
             for (int _col_idx = 0; _col_idx <= obj_dim - 1; _col_idx++) {

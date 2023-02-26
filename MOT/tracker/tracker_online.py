@@ -131,7 +131,8 @@ class TrackerOnline(object):
         cls_conf = cls_conf[mask]
 
         # parse result
-        res = bbox_xywh.tolist()
+        res = self.deepsort._xywh_to_tlwh(bbox_xywh)
+        res = res.tolist()
 
         # save to internal context storage
         self._temp_crt_frame_img_rgb = img_rgb

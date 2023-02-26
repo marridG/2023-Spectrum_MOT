@@ -32,7 +32,6 @@ int ShutDownPython();
  *  <li>[Note] "de-allocation" (i.e. ref cnt dec) of the Python-detection-func reference pointers <b>as params</b>
  *      is ALWAYS (success&failure) NOT committed</li>
  * </ul>
- * @param p_class_obj   (param as reference) instantiated Python-online-tracker object
  * @param p_func_detect (param as reference) located detection function of the Python-online-tracker instance
  * @param img_buffer    (param as reference) allocated `char*` binary buffer instance, representing the target image
  * @param img_size_byte (param as copy) size of the image, in bytes

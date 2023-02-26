@@ -46,7 +46,7 @@ int ShutDownPython();
  *                              <li><b>#3</b>: dim of bbox features. is ALWAYS (success&failure) `LEN_BBOX_FEATURE`.</li>
  *                          </ul>
  */
-static auto detect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byte) {
+static auto ExecDetect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byte) {
 
     // reference:
     //  auto return type: https://stackoverflow.com/a/56059378
@@ -152,7 +152,7 @@ static auto detect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byt
  *                              <li><b>#3</b>: dim of bbox features. is ALWAYS (success&failure) `DIM_TRACK_OBJ_FEATURE`.</li>
  *                          </ul>
  */
-static auto track(PyObject *&p_func_track) {
+static auto ExecTrack(PyObject *&p_func_track) {
 
     // reference:
     //  auto return type: https://stackoverflow.com/a/56059378

@@ -25,6 +25,7 @@
 
 storage.googleapis.com
 runs/*
+!runs/res_yolo_xywh_2_xywh.py
 data/*
 data/images/*
 !data/*.yaml

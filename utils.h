@@ -113,7 +113,7 @@ static auto detect(PyObject *&p_func_detect, char *&img_buffer, int img_size_byt
     // view GT by:
     //  1. copy ~/test.jpg to ~/MOT/tracker/detector/YOLOv5/test.jpg
     //  2. cd to: ~/MOT/tracker/detector/YOLOv5/
-    //  3. run: python detect.py --weights weight/0205_0500__img=1280__bs=32__ep=300.pt --source test.jpg --save-txt --save-conf
+    //  3. run: python detect.py --weights weight/best.pt --source test.jpg --save-txt --save-conf
     //  4. view bbox in: runs/detect/exp*/test.jpg
     //  5. view bbox values in: runs/detect/exp*/labels/test.txt
     //  6. parse & check:

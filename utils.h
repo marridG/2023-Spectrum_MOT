@@ -224,6 +224,49 @@ static auto ExecTrackSim(PyObject *&p_func_track_sim) {
 }
 
 
+static auto ExecTrackSpectrum(PyObject *&p_func_track_spectrum, int obj_cnt,
+                              char **&img_buffer_list, int *&img_size_byte_list) {
+
+    // dim of the features representing a bounding-box
+    static const int DIM_TRACK_OBJ_FEATURE = 5;  // 5=x_top_left/y_top_left/w/h/id
+
+    // local Python objects pointers
+    PyObject *p_args, *p_return;
+    PyObject *p_temp;
+
+    // parse args
+    int is_debug = 0;  // `0` if is TRUE, `1` otherwise
+#ifdef DEBUG_UTILS_H
+    is_debug = 1;
+#endif
+    p_temp = PyList_New(obj_cnt);
+    for (int _obj_idx = 0; _obj_idx <= obj_cnt - 1; _obj_idx++) {
+        char *_obj_img_buffer = img_buffer_list[_obj_idx];
+        int _obj_img_size_byte = img_size_byte_list[_obj_idx];
+
+        PyList_SetItem(p_temp, _obj_idx, Py_BuildValue("y#", _obj_img_buffer, _obj_img_size_byte));
+    }
+    p_args = PyTuple_New(2);
+    PyTuple_SetItem(p_args, 0, p_temp);
+    PyTuple_SetItem(p_args, 1, Py_BuildValue("i", is_debug));
+
+    // call function
+    p_return = PyObject_CallObject(p_func_track_spectrum, p_args);
+    Py_DECREF(p_args);
+    Py_DECREF(p_temp);
+    if (!p_return) {  // error handling
+        for (int i = 0; i <= obj_cnt - 1; i++) {
+            delete img_buffer_list[i];
+        }
+        delete[] img_buffer_list;
+        delete[] img_size_byte_list;
+        PyErr_Print();
+        fprintf(stderr, "[ERROR] Calling Detection Handler Failed\n");
+        auto obj_arr_err = new int[0][DIM_TRACK_OBJ_FEATURE];  // compatability alert: C++ 11 or up
+        return std::make_tuple(obj_arr_err, -2, DIM_TRACK_OBJ_FEATURE);  // compatability alert: C++ 11 or up
+    }
+}
+
 // inputs
 template<typename ... Args>
 std::string string_format(const std::string &format, Args ... args) {

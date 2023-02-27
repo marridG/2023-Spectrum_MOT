@@ -89,8 +89,8 @@ int main() {
     //     }
 
     int detect_obj_cnt_saved = 12;
-    auto img_buffer_list = new char *[detect_obj_cnt_saved];  // remember to destruct!!
-    auto img_size_byte_list = new int[detect_obj_cnt_saved]; // remember to destruct!!
+    char **img_buffer_list = new char *[detect_obj_cnt_saved];  // remember to destruct!!
+    int *img_size_byte_list = new int[detect_obj_cnt_saved]; // remember to destruct!!
     const string fn_template = "./output/img_res_debug/temp_res__frame=%d__detect-obj=%d.jpg";
     for (int _obj_idx = 0; _obj_idx <= detect_obj_cnt_saved - 1; _obj_idx++) {
         string fn = string_format(fn_template, 0, _obj_idx);
@@ -101,6 +101,9 @@ int main() {
         img_buffer_list[_obj_idx] = _img_buffer;
         img_size_byte_list[_obj_idx] = _img_size_byte;
     }
+    // cout << typeid(img_buffer_list).name() << endl;  // PPc
+    // cout << typeid(img_size_byte_list).name() << endl;  // Pi
+    ExecTrackSpectrum(p_func_track_spectrum, detect_obj_cnt_saved, img_buffer_list, img_size_byte_list);
 
     // Py_XDECREF(p_temp);
     // Py_XDECREF(p_return);

@@ -268,7 +268,11 @@ class TrackerOnline(object):
         return self._track_sim(is_debug=is_debug)
 
     def track_spectrum(self, img_buffer_list: List[bytes], is_debug: int = 0):
-        pass
+        is_debug = bool(is_debug)  # forceful type cast
+        if self._temp_crt_frame_detect_done is False:
+            raise AssertionError("Cannot Apply Tracking on Detection-NOT-Handled Frame Image. Please Call `detect()`.")
+
+        img_list = [buffer_2_image(img_buffer=_img_buffer, is_debug=True) for _img_buffer in img_buffer_list]
 
 # def run(self):
 #     results = []

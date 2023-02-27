@@ -1,5 +1,5 @@
 import os.path
-
+from typing import List
 import cv2
 import numpy as np
 import torch
@@ -42,10 +42,13 @@ class DeepSort(object):
         self.spectrum_templates = spectrum_templates
         self.spectrum_thresh_dist = spectrum_thresh_dist
 
-    def update(self, bbox_xywh, confidences, ori_img):
+    def update(self, bbox_xywh, confidences, ori_img, bbox_spectrum_list: List[np.ndarray] = None):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
-        features, valid_box_idx_ref = self._get_features(bbox_xywh, ori_img)
+        if bbox_spectrum_list is None:
+            features, valid_box_idx_ref = self._get_features(bbox_xywh, ori_img)
+        else:
+            features, valid_box_idx_ref = self._get_features_from_spectrum(bbox_spectrum_list)
         # added: apply spectrum template thresholding
         bbox_xywh = bbox_xywh[valid_box_idx_ref]
         confidences = confidences[valid_box_idx_ref]
@@ -143,6 +146,20 @@ class DeepSort(object):
                 im_crops.append(im)
                 valid_box_ref.append(box_idx)
             # im_crops.append(im)
+        if im_crops:
+            features = self.extractor(im_crops)
+        else:
+            features = np.array([])
+        return features, valid_box_ref
+
+    def _get_features_from_spectrum(self, bbox_spectrum_list: List[np.ndarray]):
+        im_crops = []
+        valid_box_ref = []
+        for box_idx, box_spectrum in enumerate(bbox_spectrum_list):
+            # added: spectrum template matching
+            if self._apply_spectrum_template_matching(box_spectrum):
+                im_crops.append(box_spectrum)
+                valid_box_ref.append(box_idx)
         if im_crops:
             features = self.extractor(im_crops)
         else:

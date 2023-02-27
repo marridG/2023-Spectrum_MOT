@@ -199,7 +199,7 @@ class TrackerOnline(object):
         img = buffer_2_image(img_buffer=img_buffer, is_debug=False)
         return self._detect(img=img, is_debug=is_debug)
 
-    def _track_sim(self, is_debug: bool = False) -> List[List[int]]:
+    def _track(self, bbox_spectrum_list: List[np.ndarray] = None, is_debug: bool = False) -> List[List[int]]:
         time_start = time.time()
 
         # get internal context storage
@@ -208,7 +208,10 @@ class TrackerOnline(object):
         img_rgb = self._temp_crt_frame_img_rgb
 
         # do tracking
-        outputs = self.deepsort.update(bbox_xywh=bbox_xywh, confidences=cls_conf, ori_img=img_rgb)
+        outputs = self.deepsort.update(
+            bbox_xywh=bbox_xywh, confidences=cls_conf, ori_img=img_rgb,
+            bbox_spectrum_list=bbox_spectrum_list
+        )
 
         # parse result
         res = []
@@ -265,14 +268,15 @@ class TrackerOnline(object):
         is_debug = bool(is_debug)  # forceful type cast
         if self._temp_crt_frame_detect_done is False:
             raise AssertionError("Cannot Apply Tracking on Detection-NOT-Handled Frame Image. Please Call `detect()`.")
-        return self._track_sim(is_debug=is_debug)
+        return self._track(bbox_spectrum_list=None, is_debug=is_debug)
 
-    def track_spectrum(self, img_buffer_list: List[bytes], is_debug: int = 0):
+    def track_spectrum(self, spectrum_buffer_list: List[bytes], is_debug: int = 0):
         is_debug = bool(is_debug)  # forceful type cast
         if self._temp_crt_frame_detect_done is False:
             raise AssertionError("Cannot Apply Tracking on Detection-NOT-Handled Frame Image. Please Call `detect()`.")
 
-        img_list = [buffer_2_image(img_buffer=_img_buffer, is_debug=True) for _img_buffer in img_buffer_list]
+        spectrum_list = [buffer_2_image(img_buffer=_img_buffer, is_debug=False) for _img_buffer in spectrum_buffer_list]
+        return self._track(bbox_spectrum_list=spectrum_list, is_debug=is_debug)
 
 # def run(self):
 #     results = []

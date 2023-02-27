@@ -88,22 +88,52 @@ int main() {
     //         cout << endl << endl;
     //     }
 
-    int detect_obj_cnt_saved = 12;
-    char **img_buffer_list = new char *[detect_obj_cnt_saved];  // remember to destruct!!
-    int *img_size_byte_list = new int[detect_obj_cnt_saved]; // remember to destruct!!
-    const string fn_template = "./output/img_res_debug/temp_res__frame=%d__detect-obj=%d.jpg";
-    for (int _obj_idx = 0; _obj_idx <= detect_obj_cnt_saved - 1; _obj_idx++) {
-        string fn = string_format(fn_template, 0, _obj_idx);
+    for (int i = 0; i <= 4; i++) {
 
-        char *_img_buffer;  // remember to destruct!!
-        int _img_size_byte;
-        tie(_img_buffer, _img_size_byte) = MakeImageStreamBufferFromFile(fn);
-        img_buffer_list[_obj_idx] = _img_buffer;
-        img_size_byte_list[_obj_idx] = _img_size_byte;
+        // init image buffer (analog by reading from file)
+        //      compatability alert: C++ 11 or up
+        char *img_buffer;  // remember to destruct!!
+        int img_size_byte;
+        tie(img_buffer, img_size_byte) = MakeImageStreamBufferFromFile("../../test.jpg");
+        cout << img_buffer << "=>" << img_size_byte << endl;
+
+        // exec detection: image ==> bbox
+        //      compatability alert: C++ 11 or up
+        auto _detect_res = ExecDetect(p_func_detect, img_buffer, img_size_byte);
+        auto detect_obj_arr = get<0>(_detect_res);  // int(*)[detect_obj_dim],
+        int detect_obj_cnt = get<1>(_detect_res);
+        int detect_obj_dim = get<2>(_detect_res);
+
+        delete[] detect_obj_arr;
+
+        int detect_obj_cnt_saved = 12;
+        char **img_buffer_list = new char *[detect_obj_cnt_saved];  // remember to destruct!!
+        int *img_size_byte_list = new int[detect_obj_cnt_saved]; // remember to destruct!!
+        const string fn_template = "./output/img_res_debug/temp_res__frame=%d__detect-obj=%d.jpg";
+        for (int _obj_idx = 0; _obj_idx <= detect_obj_cnt_saved - 1; _obj_idx++) {
+            string fn = string_format(fn_template, i, _obj_idx);
+
+            char *_img_buffer;  // remember to destruct!!
+            int _img_size_byte;
+            tie(_img_buffer, _img_size_byte) = MakeImageStreamBufferFromFile(fn);
+            img_buffer_list[_obj_idx] = _img_buffer;
+            img_size_byte_list[_obj_idx] = _img_size_byte;
+        }
+        // cout << typeid(img_buffer_list).name() << endl;  // PPc
+        // cout << typeid(img_size_byte_list).name() << endl;  // Pi
+
+        // exec track - simulated
+        //      compatability alert: C++ 11 or up
+        auto _track_res = ExecTrackSpectrum(p_func_track_spectrum,
+                                            detect_obj_cnt_saved, img_buffer_list, img_size_byte_list);
+        auto track_obj_arr = get<0>(_track_res);  // int(*)[detect_obj_dim],
+        int track_obj_cnt = get<1>(_track_res);
+        int track_obj_dim = get<2>(_track_res);
+        delete[] track_obj_arr;
+
+        cout << endl << endl;
     }
-    // cout << typeid(img_buffer_list).name() << endl;  // PPc
-    // cout << typeid(img_size_byte_list).name() << endl;  // Pi
-    ExecTrackSpectrum(p_func_track_spectrum, detect_obj_cnt_saved, img_buffer_list, img_size_byte_list);
+
 
     // Py_XDECREF(p_temp);
     // Py_XDECREF(p_return);

@@ -19,7 +19,7 @@
 // init
 int InitPython();
 int InitOnlineTracker(PyObject *&p_module, PyObject *&p_class, PyObject *&p_class_obj,
-                      PyObject *&p_func_detect, PyObject *&p_func_track);
+                      PyObject *&p_func_detect, PyObject *&p_func_track_sim, PyObject *&p_func_track_spectrum);
 // destruct
 int ShutDownPython();
 

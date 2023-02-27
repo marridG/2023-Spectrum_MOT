@@ -267,6 +267,9 @@ class TrackerOnline(object):
             raise AssertionError("Cannot Apply Tracking on Detection-NOT-Handled Frame Image. Please Call `detect()`.")
         return self._track_sim(is_debug=is_debug)
 
+    def track_spectrum(self, img_buffer_list: List[bytes], is_debug: int = 0):
+        pass
+
 # def run(self):
 #     results = []
 #     idx_frame = 0

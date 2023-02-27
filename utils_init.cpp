@@ -75,15 +75,16 @@ int InitPython() {
  *      </ul>
  *  </li>
  * </ul>
- * @param p_module          (param as reference) destination to store the located Python entry file
- * @param p_class           (param as reference) destination to store the located Python tracker class
- * @param p_class_obj       (param as reference) destination to store the instantiated Python tracker class instance
- * @param p_func_detect     (param as reference) destination to store the located detection function
- * @param p_func_track      (param as reference) destination to store the located tracking function
- * @return                  `0` if successful, `-1` or raised errors otherwise
+ * @param p_module              (param as reference) destination to store the located Python entry file
+ * @param p_class               (param as reference) destination to store the located Python tracker class
+ * @param p_class_obj           (param as reference) destination to store the instantiated Python tracker class instance
+ * @param p_func_detect         (param as reference) destination to store the located detection function
+ * @param p_func_track_sim      (param as reference) destination to store the located tracking (simulated) function
+ * @param p_func_track_spectrum (param as reference) destination to store the located tracking (spectrum) function
+ * @return                      `0` if successful, `-1` or raised errors otherwise
  */
 int InitOnlineTracker(PyObject *&p_module, PyObject *&p_class, PyObject *&p_class_obj,
-                      PyObject *&p_func_detect, PyObject *&p_func_track) {
+                      PyObject *&p_func_detect, PyObject *&p_func_track_sim, PyObject *&p_func_track_spectrum) {
 
     // find & import module
     p_module = PyImport_ImportModule("tracker_online");
@@ -137,18 +138,31 @@ int InitOnlineTracker(PyObject *&p_module, PyObject *&p_class, PyObject *&p_clas
         return -1;
     }
     cout << "Detection Function Located ... " << flush;
-    // find func: tracking
-    p_func_track = PyObject_GetAttrString(p_class_obj, "track_sim");
-    if (!p_func_track || !PyCallable_Check(p_func_track)) {  // error handling
+    // find func: tracking - simulated
+    p_func_track_sim = PyObject_GetAttrString(p_class_obj, "track_sim");
+    if (!p_func_track_sim || !PyCallable_Check(p_func_track_sim)) {  // error handling
         Py_DECREF(p_func_detect);
         Py_DECREF(p_class_obj);
         Py_DECREF(p_class);
         Py_DECREF(p_module);
         PyErr_Print();
-        fprintf(stderr, "[ERROR] Failed to Find Method \"%s\"\n", "track");
+        fprintf(stderr, "[ERROR] Failed to Find Method \"%s\"\n", "track_sim");
         return -1;
     }
-    cout << "Tracking Function Located ... ALL Init Done." << flush;
+    cout << "Tracking Function (Simulated) Located ... " << flush;
+    // find func: tracking - spectrum
+    p_func_track_spectrum = PyObject_GetAttrString(p_class_obj, "track_spectrum");
+    if (!p_func_track_sim || !PyCallable_Check(p_func_track_sim)) {  // error handling
+        Py_DECREF(p_func_track_sim);
+        Py_DECREF(p_func_detect);
+        Py_DECREF(p_class_obj);
+        Py_DECREF(p_class);
+        Py_DECREF(p_module);
+        PyErr_Print();
+        fprintf(stderr, "[ERROR] Failed to Find Method \"%s\"\n", "track_spectrum");
+        return -1;
+    }
+    cout << "Tracking Function (Spectrum) Located ... ALL Init Done." << endl;
 
     return 0;
 }

@@ -29,11 +29,12 @@ int main() {
     // RunPyFileClsFunc();
 
     // declare pointer variables
-    PyObject *p_name, *p_module, *p_class, *p_class_obj, *p_func_detect, *p_func_track;
+    PyObject *p_name, *p_module, *p_class, *p_class_obj, *p_func_detect, *p_func_track_sim, *p_func_track_spectrum;
     PyObject *p_args, *p_return;
     PyObject *p_temp;
 
-    if (0 != InitOnlineTracker(p_module, p_class, p_class_obj, p_func_detect, p_func_track)) {
+    if (0 != InitOnlineTracker(p_module, p_class, p_class_obj,
+                               p_func_detect, p_func_track_sim, p_func_track_spectrum)) {
         fprintf(stderr, "[ERROR] Failed to Init Online Tracker.\n");
         return -1;
     }
@@ -78,7 +79,7 @@ int main() {
     //
     //         // exec track - simulated
     //         //      compatability alert: C++ 11 or up
-    //         auto _track_res = ExecTrackSim(p_func_track);
+    //         auto _track_res = ExecTrackSim(p_func_track_sim);
     //         auto track_obj_arr = get<0>(_track_res);  // int(*)[detect_obj_dim],
     //         int track_obj_cnt = get<1>(_track_res);
     //         int track_obj_dim = get<2>(_track_res);
@@ -104,7 +105,8 @@ int main() {
     // Py_XDECREF(p_temp);
     // Py_XDECREF(p_return);
     // Py_XDECREF(p_args);
-    Py_XDECREF(p_func_track);
+    Py_XDECREF(p_func_track_sim);
+    Py_XDECREF(p_func_track_spectrum);
     Py_XDECREF(p_func_detect);
     Py_XDECREF(p_class_obj);
     Py_XDECREF(p_class);

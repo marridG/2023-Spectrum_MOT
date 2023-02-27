@@ -61,26 +61,28 @@ int main() {
         // exec detection: image ==> bbox
         //      compatability alert: C++ 11 or up
         auto _detect_res = ExecDetect(p_func_detect, img_buffer, img_size_byte);
-        auto obj_arr = get<0>(_detect_res);  // int(*)[obj_dim],
-        int obj_cnt = get<1>(_detect_res);
-        int obj_dim = get<2>(_detect_res);
+        auto detect_obj_arr = get<0>(_detect_res);  // int(*)[detect_obj_dim],
+        int detect_obj_cnt = get<1>(_detect_res);
+        int detect_obj_dim = get<2>(_detect_res);
 #ifdef DEBUG
-        printf("Detection Results - (%d, %d) array of x_top_left/y_top_left/w/h:\n", obj_cnt, obj_dim);
-        for (int _row_idx = 0; _row_idx <= obj_cnt - 1; _row_idx++) {
+        printf("Detection Results - (%d, %d) array of x_top_left/y_top_left/w/h:\n", detect_obj_cnt, detect_obj_dim);
+        for (int _row_idx = 0; _row_idx <= detect_obj_cnt - 1; _row_idx++) {
             cout << "\tobj #" << _row_idx << ": (" << flush;
-            for (int _col_idx = 0; _col_idx <= obj_dim - 1; _col_idx++) {
-                cout << obj_arr[_row_idx][_col_idx] << "," << flush;
+            for (int _col_idx = 0; _col_idx <= detect_obj_dim - 1; _col_idx++) {
+                cout << detect_obj_arr[_row_idx][_col_idx] << "," << flush;
             }
             cout << ")" << endl;
         }
 #endif
+        delete[] detect_obj_arr;
 
         // exec track - simulated
         //      compatability alert: C++ 11 or up
         auto _track_res = ExecTrackSim(p_func_track);
-        auto track_obj_arr = get<0>(_track_res);  // int(*)[obj_dim],
+        auto track_obj_arr = get<0>(_track_res);  // int(*)[detect_obj_dim],
         int track_obj_cnt = get<1>(_track_res);
         int track_obj_dim = get<2>(_track_res);
+        delete[] track_obj_arr;
 
         cout << endl << endl;
     }

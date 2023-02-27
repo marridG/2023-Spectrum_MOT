@@ -143,8 +143,8 @@ static auto ExecDetect(PyObject *&p_func_detect, char *&img_buffer, int img_size
  *  <li>[Note] "de-allocation" (i.e. ref cnt dec) of the Python-detection-func reference pointers <b>as params</b>
  *      is ALWAYS (success&failure) NOT committed</li>
  * </ul>
- * @param p_func_track  (param as reference) located tracking function of the Python-online-tracker instance
- * @return              a tuple of (char(*)[DIM_TRACK_OBJ_FEATURE=5], int, int), where:
+ * @param p_func_track_sim  (param as reference) located tracking function of the Python-online-tracker instance
+ * @return                  a tuple of (char(*)[DIM_TRACK_OBJ_FEATURE=5], int, int), where:
  *                          <ul>
  *                              <li><b>#1</b>: an allocated `char(*)[LEN_BBOX_FEATURE=4]` instance,
  *                                  representing a 2d-array shaped (cnt_obj, dim_feature),
@@ -155,7 +155,7 @@ static auto ExecDetect(PyObject *&p_func_detect, char *&img_buffer, int img_size
  *                              <li><b>#3</b>: dim of bbox features. is ALWAYS (success&failure) `DIM_TRACK_OBJ_FEATURE`.</li>
  *                          </ul>
  */
-static auto ExecTrackSim(PyObject *&p_func_track) {
+static auto ExecTrackSim(PyObject *&p_func_track_sim) {
 
     // reference:
     //  auto return type: https://stackoverflow.com/a/56059378
@@ -175,7 +175,7 @@ static auto ExecTrackSim(PyObject *&p_func_track) {
     p_args = Py_BuildValue("(i)", is_debug);  // will remain typed <int> in Python
 
     // call function
-    p_return = PyObject_CallObject(p_func_track, p_args);
+    p_return = PyObject_CallObject(p_func_track_sim, p_args);
     Py_DECREF(p_args);
     if (!p_return) {  // error handling
         PyErr_Print();

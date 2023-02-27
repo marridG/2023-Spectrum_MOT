@@ -50,43 +50,43 @@ int main() {
     //      << Py_REFCNT(p_module) << "," << Py_REFCNT(p_class) << "," << Py_REFCNT(p_class_obj) << endl;
 #endif
 
-    //     for (int i = 0; i <= 4; i++) {
-    //
-    //         // init image buffer (analog by reading from file)
-    //         //      compatability alert: C++ 11 or up
-    //         char *img_buffer;  // remember to destruct!!
-    //         int img_size_byte;
-    //         tie(img_buffer, img_size_byte) = MakeImageStreamBufferFromFile("../../test.jpg");
-    //         cout << img_buffer << "=>" << img_size_byte << endl;
-    //
-    //         // exec detection: image ==> bbox
-    //         //      compatability alert: C++ 11 or up
-    //         auto _detect_res = ExecDetect(p_func_detect, img_buffer, img_size_byte);
-    //         auto detect_obj_arr = get<0>(_detect_res);  // int(*)[detect_obj_dim],
-    //         int detect_obj_cnt = get<1>(_detect_res);
-    //         int detect_obj_dim = get<2>(_detect_res);
-    // #ifdef DEBUG
-    //         printf("Detection Results - (%d, %d) array of x_top_left/y_top_left/w/h:\n", detect_obj_cnt, detect_obj_dim);
-    //         for (int _row_idx = 0; _row_idx <= detect_obj_cnt - 1; _row_idx++) {
-    //             cout << "\tobj #" << _row_idx << ": (" << flush;
-    //             for (int _col_idx = 0; _col_idx <= detect_obj_dim - 1; _col_idx++) {
-    //                 cout << detect_obj_arr[_row_idx][_col_idx] << "," << flush;
-    //             }
-    //             cout << ")" << endl;
-    //         }
-    // #endif
-    //         delete[] detect_obj_arr;
-    //
-    //         // exec track - simulated
-    //         //      compatability alert: C++ 11 or up
-    //         auto _track_res = ExecTrackSim(p_func_track_sim);
-    //         auto track_obj_arr = get<0>(_track_res);  // int(*)[detect_obj_dim],
-    //         int track_obj_cnt = get<1>(_track_res);
-    //         int track_obj_dim = get<2>(_track_res);
-    //         delete[] track_obj_arr;
-    //
-    //         cout << endl << endl;
-    //     }
+        for (int i = 0; i <= 4; i++) {
+
+            // init image buffer (analog by reading from file)
+            //      compatability alert: C++ 11 or up
+            char *img_buffer;  // remember to destruct!!
+            int img_size_byte;
+            tie(img_buffer, img_size_byte) = MakeImageStreamBufferFromFile("../../test.jpg");
+            cout << img_buffer << "=>" << img_size_byte << endl;
+
+            // exec detection: image ==> bbox
+            //      compatability alert: C++ 11 or up
+            auto _detect_res = ExecDetect(p_func_detect, img_buffer, img_size_byte);
+            auto detect_obj_arr = get<0>(_detect_res);  // int(*)[detect_obj_dim],
+            int detect_obj_cnt = get<1>(_detect_res);
+            int detect_obj_dim = get<2>(_detect_res);
+    #ifdef DEBUG
+            printf("Detection Results - (%d, %d) array of x_top_left/y_top_left/w/h:\n", detect_obj_cnt, detect_obj_dim);
+            for (int _row_idx = 0; _row_idx <= detect_obj_cnt - 1; _row_idx++) {
+                cout << "\tobj #" << _row_idx << ": (" << flush;
+                for (int _col_idx = 0; _col_idx <= detect_obj_dim - 1; _col_idx++) {
+                    cout << detect_obj_arr[_row_idx][_col_idx] << "," << flush;
+                }
+                cout << ")" << endl;
+            }
+    #endif
+            delete[] detect_obj_arr;
+
+            // exec track - simulated
+            //      compatability alert: C++ 11 or up
+            auto _track_res = ExecTrackSim(p_func_track_sim);
+            auto track_obj_arr = get<0>(_track_res);  // int(*)[detect_obj_dim],
+            int track_obj_cnt = get<1>(_track_res);
+            int track_obj_dim = get<2>(_track_res);
+            delete[] track_obj_arr;
+
+            cout << endl << endl;
+        }
 
     for (int i = 0; i <= 4; i++) {
 

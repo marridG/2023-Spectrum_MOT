@@ -6,6 +6,9 @@
 #include <Python.h>
 #include<tuple>  // compatability alert: C++ 11 or up
 #include <iostream>
+#include <memory>
+// #include <string>
+// #include <stdexcept>
 
 #define DEBUG_UTILS_H
 
@@ -222,11 +225,6 @@ static auto ExecTrackSim(PyObject *&p_func_track) {
 
 
 // inputs
-
-#include <memory>
-#include <string>
-#include <stdexcept>
-
 template<typename ... Args>
 std::string string_format(const std::string &format, Args ... args) {
     int size_s = std::snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
